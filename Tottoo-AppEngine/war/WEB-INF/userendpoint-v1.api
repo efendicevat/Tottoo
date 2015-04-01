@@ -1,0 +1,267 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://premium-fuze-90207.appspot.com/_ah/api",
+  "name" : "userendpoint",
+  "version" : "v1",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "https://premium-fuze-90207.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "ownerDomain" : "ege.com",
+  "ownerName" : "ege.com",
+  "packagePath" : "tottoo",
+  "methods" : {
+    "userendpoint.getUser" : {
+      "path" : "user/{id}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.UserEndpoint.getUser",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.insertUser" : {
+      "path" : "user",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.UserEndpoint.insertUser",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.listUser" : {
+      "path" : "user",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.UserEndpoint.listUser",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.updateUser" : {
+      "path" : "user",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.UserEndpoint.updateUser",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.removeUser" : {
+      "path" : "user/{id}",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.UserEndpoint.removeUser",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "User" : {
+        "id" : "User",
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "$ref" : "Key"
+          },
+          "identifier" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "nextTottoo" : {
+            "type" : "string"
+          },
+          "tottooList" : {
+            "$ref" : "Tottoo"
+          }
+        }
+      },
+      "Key" : {
+        "id" : "Key",
+        "type" : "object",
+        "properties" : {
+          "kind" : {
+            "type" : "string"
+          },
+          "appId" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "parent" : {
+            "$ref" : "Key"
+          },
+          "complete" : {
+            "type" : "boolean"
+          },
+          "namespace" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Tottoo" : {
+        "id" : "Tottoo",
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "$ref" : "Key"
+          },
+          "level0" : {
+            "type" : "string"
+          },
+          "level1" : {
+            "type" : "string"
+          },
+          "level2" : {
+            "type" : "string"
+          },
+          "level3" : {
+            "type" : "string"
+          },
+          "level4" : {
+            "type" : "string"
+          },
+          "level5" : {
+            "type" : "string"
+          },
+          "level6" : {
+            "type" : "string"
+          },
+          "level7" : {
+            "type" : "string"
+          },
+          "level8" : {
+            "type" : "string"
+          }
+        }
+      },
+      "CollectionResponse_User" : {
+        "id" : "CollectionResponse_User",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "User"
+            }
+          },
+          "nextPageToken" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "com.ege.tottoo.UserEndpoint.getUser" : {
+        "response" : {
+          "$ref" : "User"
+        }
+      },
+      "com.ege.tottoo.UserEndpoint.insertUser" : {
+        "request" : {
+          "$ref" : "User"
+        },
+        "response" : {
+          "$ref" : "User"
+        }
+      },
+      "com.ege.tottoo.UserEndpoint.listUser" : {
+        "response" : {
+          "$ref" : "CollectionResponse_User"
+        }
+      },
+      "com.ege.tottoo.UserEndpoint.updateUser" : {
+        "request" : {
+          "$ref" : "User"
+        },
+        "response" : {
+          "$ref" : "User"
+        }
+      },
+      "com.ege.tottoo.UserEndpoint.removeUser" : {
+      }
+    }
+  }
+}

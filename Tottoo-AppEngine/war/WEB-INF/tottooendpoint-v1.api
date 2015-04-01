@@ -1,0 +1,243 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://premium-fuze-90207.appspot.com/_ah/api",
+  "name" : "tottooendpoint",
+  "version" : "v1",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "https://premium-fuze-90207.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "ownerDomain" : "ege.com",
+  "ownerName" : "ege.com",
+  "packagePath" : "tottoo",
+  "methods" : {
+    "tottooendpoint.updateTottoo" : {
+      "path" : "tottoo",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.TottooEndpoint.updateTottoo",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "tottooendpoint.getTottoo" : {
+      "path" : "tottoo/{id}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.TottooEndpoint.getTottoo",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "tottooendpoint.removeTottoo" : {
+      "path" : "tottoo/{id}",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.TottooEndpoint.removeTottoo",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "tottooendpoint.listTottoo" : {
+      "path" : "tottoo",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.TottooEndpoint.listTottoo",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "tottooendpoint.insertTottoo" : {
+      "path" : "tottoo",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.TottooEndpoint.insertTottoo",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "Tottoo" : {
+        "id" : "Tottoo",
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "$ref" : "Key"
+          },
+          "level0" : {
+            "type" : "string"
+          },
+          "level1" : {
+            "type" : "string"
+          },
+          "level2" : {
+            "type" : "string"
+          },
+          "level3" : {
+            "type" : "string"
+          },
+          "level4" : {
+            "type" : "string"
+          },
+          "level5" : {
+            "type" : "string"
+          },
+          "level6" : {
+            "type" : "string"
+          },
+          "level7" : {
+            "type" : "string"
+          },
+          "level8" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Key" : {
+        "id" : "Key",
+        "type" : "object",
+        "properties" : {
+          "kind" : {
+            "type" : "string"
+          },
+          "appId" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "parent" : {
+            "$ref" : "Key"
+          },
+          "complete" : {
+            "type" : "boolean"
+          },
+          "namespace" : {
+            "type" : "string"
+          }
+        }
+      },
+      "CollectionResponse_Tottoo" : {
+        "id" : "CollectionResponse_Tottoo",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Tottoo"
+            }
+          },
+          "nextPageToken" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "com.ege.tottoo.TottooEndpoint.updateTottoo" : {
+        "request" : {
+          "$ref" : "Tottoo"
+        },
+        "response" : {
+          "$ref" : "Tottoo"
+        }
+      },
+      "com.ege.tottoo.TottooEndpoint.getTottoo" : {
+        "response" : {
+          "$ref" : "Tottoo"
+        }
+      },
+      "com.ege.tottoo.TottooEndpoint.removeTottoo" : {
+      },
+      "com.ege.tottoo.TottooEndpoint.listTottoo" : {
+        "response" : {
+          "$ref" : "CollectionResponse_Tottoo"
+        }
+      },
+      "com.ege.tottoo.TottooEndpoint.insertTottoo" : {
+        "request" : {
+          "$ref" : "Tottoo"
+        },
+        "response" : {
+          "$ref" : "Tottoo"
+        }
+      }
+    }
+  }
+}
