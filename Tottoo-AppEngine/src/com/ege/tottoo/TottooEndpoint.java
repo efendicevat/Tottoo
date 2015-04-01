@@ -103,9 +103,9 @@ public class TottooEndpoint {
 	public Tottoo insertTottoo(Tottoo tottoo) {
 		EntityManager mgr = getEntityManager();
 		try {
-			if (containsTottoo(tottoo)) {
+			/*if (containsTottoo(tottoo)) {
 				throw new EntityExistsException("Object already exists");
-			}
+			}*/
 			mgr.persist(tottoo);
 		} finally {
 			mgr.close();
