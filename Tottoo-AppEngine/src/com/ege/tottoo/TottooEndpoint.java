@@ -1,6 +1,18 @@
 package com.ege.tottoo;
 
-import com.ege.tottoo.EMF;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.annotation.Nullable;
+import javax.inject.Named;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.Query;
+
+import org.mortbay.log.Log;
+
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -8,20 +20,11 @@ import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.datanucleus.query.JPACursorHelper;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-import javax.inject.Named;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
-import org.mortbay.log.Log;
-
 @Api(name = "tottooendpoint", namespace = @ApiNamespace(ownerDomain = "ege.com", ownerName = "ege.com", packagePath = "tottoo"))
 public class TottooEndpoint {
 
+	private static final Logger log = Logger.getLogger(TottooEndpoint.class.getName());
+	
 	/**
 	 * This method lists all the entities inserted in datastore.
 	 * It uses HTTP GET method and paging support.
@@ -150,8 +153,8 @@ public class TottooEndpoint {
 
 	private boolean containsTottoo(Tottoo tottoo) {
 		EntityManager mgr = getEntityManager();
-		Log.info("mgr : "+mgr);
-		Log.info("tottoo : "+tottoo);
+		log.log(Level.INFO,"mgr : "+mgr);
+		log.log(Level.INFO,"tottoo : "+tottoo);
 		boolean contains = true;
 		try {
 			Tottoo item = mgr.find(Tottoo.class, tottoo.getKey());
