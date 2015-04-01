@@ -1,7 +1,6 @@
 package com.ege.tottoo;
 
 import com.ege.tottoo.EMF;
-
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -17,6 +16,8 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import org.mortbay.log.Log;
 
 @Api(name = "tottooendpoint", namespace = @ApiNamespace(ownerDomain = "ege.com", ownerName = "ege.com", packagePath = "tottoo"))
 public class TottooEndpoint {
@@ -149,6 +150,8 @@ public class TottooEndpoint {
 
 	private boolean containsTottoo(Tottoo tottoo) {
 		EntityManager mgr = getEntityManager();
+		Log.info("mgr : "+mgr);
+		Log.info("tottoo : "+tottoo);
 		boolean contains = true;
 		try {
 			Tottoo item = mgr.find(Tottoo.class, tottoo.getKey());
