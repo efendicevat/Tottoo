@@ -18,6 +18,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.datanucleus.query.JPACursorHelper;
 
 @Api(name = "tottooendpoint", namespace = @ApiNamespace(ownerDomain = "ege.com", ownerName = "ege.com", packagePath = "tottoo"))
@@ -153,11 +154,12 @@ public class TottooEndpoint {
 
 	private boolean containsTottoo(Tottoo tottoo) {
 		EntityManager mgr = getEntityManager();
-		log.log(Level.INFO,"mgr : "+mgr);
-		log.log(Level.INFO,"tottoo : "+tottoo);
+		log.log(Level.SEVERE,"mgr : "+mgr);
+		log.log(Level.SEVERE,"tottoo : "+tottoo);
 		boolean contains = true;
 		try {
-			Tottoo item = mgr.find(Tottoo.class, tottoo.getKey());
+			Key key = tottoo.getKey();
+			Tottoo item = mgr.find(Tottoo.class, key);
 			if (item == null) {
 				contains = false;
 			}
