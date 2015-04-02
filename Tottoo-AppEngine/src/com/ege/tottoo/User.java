@@ -1,5 +1,6 @@
 package com.ege.tottoo;
 
+import javax.jdo.annotations.Persistent;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +23,7 @@ public class User {
 
 	private String nextTottoo;
 	
+	@Persistent
 	private Tottoo tottooList;
 
 	public Key getKey() {
