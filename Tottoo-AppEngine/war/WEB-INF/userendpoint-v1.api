@@ -148,6 +148,9 @@
           "nextTottoo" : {
             "type" : "string"
           },
+          "currentLevel" : {
+            "type" : "string"
+          },
           "tottooList" : {
             "$ref" : "Tottoo"
           }

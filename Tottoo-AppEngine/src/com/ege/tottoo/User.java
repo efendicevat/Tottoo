@@ -25,6 +25,8 @@ public class User {
 
 	private String nextTottoo;
 	
+	private String currentLevel;
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
@@ -75,6 +77,13 @@ public class User {
 	public void setTottooList(Tottoo tottooList) {
 		this.tottooList = tottooList;
 	}
-	
+
+	public String getCurrentLevel() {
+		return currentLevel;
+	}
+
+	public void setCurrentLevel(String currentLevel) {
+		this.currentLevel = currentLevel;
+	}
 	
 }

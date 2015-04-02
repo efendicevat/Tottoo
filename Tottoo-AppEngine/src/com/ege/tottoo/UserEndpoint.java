@@ -125,6 +125,7 @@ public class UserEndpoint {
 		tottoo.setLevel8("y-6501");
 		return tottoo;
 	}
+
 	/**
 	 * This method is used for updating an existing entity. If the entity does not
 	 * exist in the datastore, an exception is thrown.
