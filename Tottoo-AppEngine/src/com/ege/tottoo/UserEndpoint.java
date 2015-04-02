@@ -1,12 +1,6 @@
 package com.ege.tottoo;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.Query;
+import com.ege.tottoo.EMF;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -14,6 +8,15 @@ import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.datanucleus.query.JPACursorHelper;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
+import javax.inject.Named;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 @Api(name = "userendpoint", namespace = @ApiNamespace(ownerDomain = "ege.com", ownerName = "ege.com", packagePath = "tottoo"))
 public class UserEndpoint {
@@ -99,8 +102,8 @@ public class UserEndpoint {
 				throw new EntityExistsException("Object already exists");
 			}*/
 			
-			Tottoo myTottoo = generateTottoo();
-			user.setTottooList(myTottoo);
+			Tottoo tottoo = generateTottoo();
+			user.setTottooList(tottoo);
 			mgr.persist(user);
 		} finally {
 			mgr.close();
@@ -108,6 +111,7 @@ public class UserEndpoint {
 		return user;
 	}
 
+	
 	private Tottoo generateTottoo() {
 		Tottoo tottoo = new Tottoo();
 		tottoo.setLevel0("y-1");
@@ -121,7 +125,6 @@ public class UserEndpoint {
 		tottoo.setLevel8("y-6501");
 		return tottoo;
 	}
-	
 	/**
 	 * This method is used for updating an existing entity. If the entity does not
 	 * exist in the datastore, an exception is thrown.

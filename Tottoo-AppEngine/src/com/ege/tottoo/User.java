@@ -1,10 +1,12 @@
 package com.ege.tottoo;
 
 import javax.jdo.annotations.Persistent;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import com.google.appengine.api.datastore.Key;
 
@@ -23,7 +25,7 @@ public class User {
 
 	private String nextTottoo;
 	
-	@Persistent
+	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
 	public Key getKey() {
