@@ -145,9 +145,6 @@
           "name" : {
             "type" : "string"
           },
-          "nextTottoo" : {
-            "type" : "string"
-          },
           "currentLevel" : {
             "type" : "string"
           },
@@ -176,11 +173,11 @@
           "parent" : {
             "$ref" : "Key"
           },
-          "namespace" : {
-            "type" : "string"
-          },
           "complete" : {
             "type" : "boolean"
+          },
+          "namespace" : {
+            "type" : "string"
           }
         }
       },
@@ -216,6 +213,9 @@
             "type" : "string"
           },
           "level8" : {
+            "type" : "string"
+          },
+          "level9" : {
             "type" : "string"
           }
         }

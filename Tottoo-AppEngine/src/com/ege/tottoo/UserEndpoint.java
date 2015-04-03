@@ -1,7 +1,7 @@
 package com.ege.tottoo;
 
 import com.ege.tottoo.EMF;
-
+import com.ege.tottoo.helper.TottooHelper;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -98,10 +98,6 @@ public class UserEndpoint {
 	public User insertUser(User user) {
 		EntityManager mgr = getEntityManager();
 		try {
-			/*if (containsUser(user)) {
-				throw new EntityExistsException("Object already exists");
-			}*/
-			
 			Tottoo tottoo = generateTottoo();
 			user.setTottooList(tottoo);
 			mgr.persist(user);
@@ -114,15 +110,7 @@ public class UserEndpoint {
 	
 	private Tottoo generateTottoo() {
 		Tottoo tottoo = new Tottoo();
-		tottoo.setLevel0("y-1");
-		tottoo.setLevel1("y-10");
-		tottoo.setLevel2("y-45");
-		tottoo.setLevel3("k-78");
-		tottoo.setLevel4("k-708");
-		tottoo.setLevel5("k-600");
-		tottoo.setLevel6("y-8");
-		tottoo.setLevel7("k-992");
-		tottoo.setLevel8("y-6501");
+		TottooHelper.generateLevels(tottoo);
 		return tottoo;
 	}
 

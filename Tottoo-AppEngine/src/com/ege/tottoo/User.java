@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.google.appengine.api.datastore.Key;
@@ -22,14 +23,15 @@ public class User {
 	private String email;
 	
 	private String name;
-
-	private String nextTottoo;
 	
 	private String currentLevel;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
+	@OneToMany(cascade = CascadeType.ALL)
+	private Interaction interaction;
+	
 	public Key getKey() {
 		return key;
 	}
@@ -60,14 +62,6 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getNextTottoo() {
-		return nextTottoo;
-	}
-
-	public void setNextTottoo(String nextTottoo) {
-		this.nextTottoo = nextTottoo;
 	}
 
 	public Tottoo getTottooList() {

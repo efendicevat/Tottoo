@@ -162,6 +162,9 @@
           },
           "level8" : {
             "type" : "string"
+          },
+          "level9" : {
+            "type" : "string"
           }
         }
       },
@@ -185,11 +188,11 @@
           "parent" : {
             "$ref" : "Key"
           },
-          "namespace" : {
-            "type" : "string"
-          },
           "complete" : {
             "type" : "boolean"
+          },
+          "namespace" : {
+            "type" : "string"
           }
         }
       },

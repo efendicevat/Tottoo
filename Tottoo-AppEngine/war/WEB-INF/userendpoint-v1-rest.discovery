@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/9ty4xXKYMYwe2fPSmnxFQp13a4c\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/VRrSk17Y5POafzcGuloJ2rLZFY4\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -150,6 +150,9 @@
     },
     "level8": {
      "type": "string"
+    },
+    "level9": {
+     "type": "string"
     }
    }
   },
@@ -170,9 +173,6 @@
      "$ref": "Key"
     },
     "name": {
-     "type": "string"
-    },
-    "nextTottoo": {
      "type": "string"
     },
     "tottooList": {

@@ -1,10 +1,13 @@
 package com.ege.tottoo;
 
+import java.util.Random;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.ege.tottoo.helper.TottooHelper;
 import com.google.appengine.api.datastore.Key;
 
 @Entity
@@ -31,7 +34,9 @@ public class Tottoo {
 	private String level7 = "";
 	
 	private String level8 = "";
-
+	
+	private String level9 = "";
+	
 	public Key getKey() {
 		return key;
 	}
@@ -111,4 +116,13 @@ public class Tottoo {
 	public void setLevel8(String level8) {
 		this.level8 = level8;
 	}
+
+	public String getLevel9() {
+		return level9;
+	}
+
+	public void setLevel9(String level9) {
+		this.level9 = level9;
+	}
+	
 }

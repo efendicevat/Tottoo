@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/O7PKcdVNu4JaVxpvLN-1ThwI5hw\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/QBG01DiMuV755ilbUBH5dSTBn5M\"",
  "discoveryVersion": "v1",
  "id": "tottooendpoint:v1",
  "name": "tottooendpoint",
@@ -149,6 +149,9 @@
      "type": "string"
     },
     "level8": {
+     "type": "string"
+    },
+    "level9": {
      "type": "string"
     }
    }
