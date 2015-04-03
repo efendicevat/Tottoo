@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.inject.Named;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -109,6 +108,7 @@ public class UserEndpoint {
 		} catch(Exception e){
 			log.log(Level.SEVERE,"mgr in insertUser : "+mgr);
 		}finally {
+			log.log(Level.WARNING,"mgr in insertUser : "+mgr);
 			mgr.close();
 		}
 		return user;
