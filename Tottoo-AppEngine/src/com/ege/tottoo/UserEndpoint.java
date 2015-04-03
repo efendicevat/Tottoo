@@ -1,5 +1,6 @@
 package com.ege.tottoo;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.datanucleus.query.JPACursorHelper;
 
 @Api(name = "userendpoint", namespace = @ApiNamespace(ownerDomain = "ege.com", ownerName = "ege.com", packagePath = "tottoo"))
@@ -97,7 +99,7 @@ public class UserEndpoint {
 	 * @return The inserted entity.
 	 */
 	@ApiMethod(name = "insertUser")
-	public User insertUser(User user) {
+	public Key insertUser(User user) {
 		EntityManager mgr = getEntityManager();
 		log.log(Level.WARNING,"mgr in insertUser : "+mgr);
 		try {
@@ -116,7 +118,7 @@ public class UserEndpoint {
 			log.log(Level.WARNING,"mgr in insertUser : "+mgr);
 			mgr.close();
 		}
-		return user;
+		return user.getKey();
 	}
 
 	
@@ -163,6 +165,69 @@ public class UserEndpoint {
 		} finally {
 			mgr.close();
 		}
+	}
+
+	@ApiMethod(name = "play")
+	public Interaction play(@Named("id") Long id,@Named("identifier") String identifier,@Named("currentlevel") String currentlevel)
+	{
+		InteractionEndpoint action = new InteractionEndpoint();
+		Interaction result = new Interaction();
+		result.setPlayTime(Calendar.getInstance().getTime());
+		String gameState = "";
+		User user = getUser(id);
+		if(user.getIdentifier().equalsIgnoreCase(identifier))
+		{
+			if(user.getCurrentLevel().equalsIgnoreCase(currentlevel))
+			{
+				Tottoo t = user.getTottooList();
+				String levelx = getCurrentLevel(t,currentlevel);
+				if(levelx.contains("y")) {
+					if(currentlevel.equalsIgnoreCase("9")) {
+						gameState="WIN";
+					} else {
+						gameState="PASSLEVEL";
+					}
+				}
+				else if(levelx.contains("k")) {
+					if(currentlevel.equalsIgnoreCase("0")) {
+						gameState="GAMEOVER";
+					} else {
+						gameState="BACKLEVEL";
+					}
+				} else {
+					gameState = "TRYAGAIN";
+				}
+			}
+		}
+		result.setGameState(gameState);
+		action.insertInteraction(result);
+		return result;
+	}
+	
+	private String getCurrentLevel(Tottoo t,String currentStatus) {
+		String levelx = "";
+		if(currentStatus.equalsIgnoreCase("0")) {
+			levelx = t.getLevel0();
+		} else if(currentStatus.equalsIgnoreCase("1")) {
+			levelx = t.getLevel1();
+		} else if(currentStatus.equalsIgnoreCase("2")) {
+			levelx = t.getLevel2();
+		} else if(currentStatus.equalsIgnoreCase("3")) {
+			levelx = t.getLevel3();
+		} else if(currentStatus.equalsIgnoreCase("4")) {
+			levelx = t.getLevel4();
+		} else if(currentStatus.equalsIgnoreCase("5")) {
+			levelx = t.getLevel5();
+		} else if(currentStatus.equalsIgnoreCase("6")) {
+			levelx = t.getLevel6();
+		} else if(currentStatus.equalsIgnoreCase("7")) {
+			levelx = t.getLevel7();
+		} else if(currentStatus.equalsIgnoreCase("8")) {
+			levelx = t.getLevel8();
+		} else if(currentStatus.equalsIgnoreCase("9")) {
+			levelx = t.getLevel9();
+		}
+		return levelx;
 	}
 
 	private boolean containsUser(User user) {

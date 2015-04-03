@@ -22,6 +22,8 @@ public class Interaction {
 	
 	private Date playTime;
 
+	private String gameState;
+	
 	public Key getKey() {
 		return key;
 	}
@@ -44,6 +46,14 @@ public class Interaction {
 
 	public void setPlayTime(Date playTime) {
 		this.playTime = playTime;
+	}
+
+	public String getGameState() {
+		return gameState;
+	}
+
+	public void setGameState(String gameState) {
+		this.gameState = gameState;
 	}
 	
 	

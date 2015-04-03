@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/VRrSk17Y5POafzcGuloJ2rLZFY4\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/LMl6pSosT4ppVEVSyUY4RZl-EXM\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -87,6 +87,22 @@
     }
    }
   },
+  "Interaction": {
+   "id": "Interaction",
+   "type": "object",
+   "properties": {
+    "gameState": {
+     "type": "string"
+    },
+    "key": {
+     "$ref": "Key"
+    },
+    "playTime": {
+     "type": "string",
+     "format": "date-time"
+    }
+   }
+  },
   "Key": {
    "id": "Key",
    "type": "object",
@@ -167,6 +183,9 @@
     "identifier": {
      "type": "string"
     },
+    "interaction": {
+     "$ref": "Interaction"
+    },
     "key": {
      "$ref": "Key"
     },
@@ -211,7 +230,7 @@
     "resource"
    ],
    "returns": {
-    "$ref": "User"
+    "$ref": "Key"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
@@ -231,6 +250,35 @@
    },
    "returns": {
     "$ref": "CollectionResponse_User"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "userendpoint.play": {
+   "id": "userendpoint.play",
+   "parameters": {
+    "currentlevel": {
+     "type": "string",
+     "required": true
+    },
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "identifier": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "id",
+    "identifier",
+    "currentlevel"
+   ],
+   "returns": {
+    "$ref": "Interaction"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

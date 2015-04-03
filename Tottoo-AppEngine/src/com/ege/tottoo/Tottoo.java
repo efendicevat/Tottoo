@@ -1,13 +1,10 @@
 package com.ege.tottoo;
 
-import java.util.Random;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.ege.tottoo.helper.TottooHelper;
 import com.google.appengine.api.datastore.Key;
 
 @Entity

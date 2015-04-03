@@ -139,6 +139,9 @@
           "playTime" : {
             "type" : "string",
             "format" : "date-time"
+          },
+          "gameState" : {
+            "type" : "string"
           }
         }
       },

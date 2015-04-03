@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/VRrSk17Y5POafzcGuloJ2rLZFY4\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/LMl6pSosT4ppVEVSyUY4RZl-EXM\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -89,6 +89,22 @@
     }
    }
   },
+  "Interaction": {
+   "id": "Interaction",
+   "type": "object",
+   "properties": {
+    "gameState": {
+     "type": "string"
+    },
+    "key": {
+     "$ref": "Key"
+    },
+    "playTime": {
+     "type": "string",
+     "format": "date-time"
+    }
+   }
+  },
   "Key": {
    "id": "Key",
    "type": "object",
@@ -169,6 +185,9 @@
     "identifier": {
      "type": "string"
     },
+    "interaction": {
+     "$ref": "Interaction"
+    },
     "key": {
      "$ref": "Key"
     },
@@ -206,14 +225,14 @@
   },
   "insertUser": {
    "id": "userendpoint.insertUser",
-   "path": "user",
+   "path": "key",
    "httpMethod": "POST",
    "request": {
     "$ref": "User",
     "parameterName": "resource"
    },
    "response": {
-    "$ref": "User"
+    "$ref": "Key"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
@@ -236,6 +255,40 @@
    },
    "response": {
     "$ref": "CollectionResponse_User"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "play": {
+   "id": "userendpoint.play",
+   "path": "play/{id}/{identifier}/{currentlevel}",
+   "httpMethod": "POST",
+   "parameters": {
+    "currentlevel": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    },
+    "identifier": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id",
+    "identifier",
+    "currentlevel"
+   ],
+   "response": {
+    "$ref": "Interaction"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

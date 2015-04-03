@@ -4,5 +4,6 @@ public enum GameState {
 	PASSLEVEL,
 	GAMEOVER,
 	TRYAGAIN,
-	BACKLEVEL
+	BACKLEVEL,
+	WIN
 }

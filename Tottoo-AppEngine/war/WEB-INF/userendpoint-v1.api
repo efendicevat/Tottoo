@@ -49,7 +49,7 @@
       }
     },
     "userendpoint.insertUser" : {
-      "path" : "user",
+      "path" : "key",
       "httpMethod" : "POST",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
@@ -81,6 +81,35 @@
           "limit" : {
             "type" : "int32",
             "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.play" : {
+      "path" : "play/{id}/{identifier}/{currentlevel}",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.UserEndpoint.play",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          },
+          "identifier" : {
+            "type" : "string",
+            "required" : true
+          },
+          "currentlevel" : {
+            "type" : "string",
+            "required" : true
           }
         },
         "body" : "empty"
@@ -233,6 +262,9 @@
           "playTime" : {
             "type" : "string",
             "format" : "date-time"
+          },
+          "gameState" : {
+            "type" : "string"
           }
         }
       },
@@ -263,12 +295,17 @@
           "$ref" : "User"
         },
         "response" : {
-          "$ref" : "User"
+          "$ref" : "Key"
         }
       },
       "com.ege.tottoo.UserEndpoint.listUser" : {
         "response" : {
           "$ref" : "CollectionResponse_User"
+        }
+      },
+      "com.ege.tottoo.UserEndpoint.play" : {
+        "response" : {
+          "$ref" : "Interaction"
         }
       },
       "com.ege.tottoo.UserEndpoint.updateUser" : {
