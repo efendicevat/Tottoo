@@ -150,6 +150,9 @@
           },
           "tottooList" : {
             "$ref" : "Tottoo"
+          },
+          "interaction" : {
+            "$ref" : "Interaction"
           }
         }
       },
@@ -217,6 +220,19 @@
           },
           "level9" : {
             "type" : "string"
+          }
+        }
+      },
+      "Interaction" : {
+        "id" : "Interaction",
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "$ref" : "Key"
+          },
+          "playTime" : {
+            "type" : "string",
+            "format" : "date-time"
           }
         }
       },
