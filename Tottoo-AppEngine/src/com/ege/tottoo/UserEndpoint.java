@@ -10,6 +10,8 @@ import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.datanucleus.query.JPACursorHelper;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.inject.Named;
@@ -21,6 +23,8 @@ import javax.persistence.Query;
 @Api(name = "userendpoint", namespace = @ApiNamespace(ownerDomain = "ege.com", ownerName = "ege.com", packagePath = "tottoo"))
 public class UserEndpoint {
 
+	private static final Logger log = Logger.getLogger(UserEndpoint.class.getName());
+	
 	/**
 	 * This method lists all the entities inserted in datastore.
 	 * It uses HTTP GET method and paging support.
@@ -97,11 +101,14 @@ public class UserEndpoint {
 	@ApiMethod(name = "insertUser")
 	public User insertUser(User user) {
 		EntityManager mgr = getEntityManager();
+		log.log(Level.WARNING,"mgr in insertUser : "+mgr);
 		try {
 			Tottoo tottoo = generateTottoo();
 			user.setTottooList(tottoo);
 			mgr.persist(user);
-		} finally {
+		} catch(Exception e){
+			log.log(Level.SEVERE,"mgr in insertUser : "+mgr);
+		}finally {
 			mgr.close();
 		}
 		return user;
