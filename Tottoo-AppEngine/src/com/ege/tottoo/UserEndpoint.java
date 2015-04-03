@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.inject.Named;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -23,7 +24,7 @@ import javax.persistence.Query;
 public class UserEndpoint {
 
 	private static final Logger log = Logger.getLogger(UserEndpoint.class.getName());
-	
+			
 	/**
 	 * This method lists all the entities inserted in datastore.
 	 * It uses HTTP GET method and paging support.
@@ -104,6 +105,12 @@ public class UserEndpoint {
 		try {
 			Tottoo tottoo = generateTottoo();
 			user.setTottooList(tottoo);
+			log.log(Level.WARNING,"Level0 : "+tottoo.getLevel0());
+			log.log(Level.WARNING,"Level1 : "+tottoo.getLevel1());
+			log.log(Level.WARNING,"Level2 : "+tottoo.getLevel2());
+			log.log(Level.WARNING,"Level3 : "+tottoo.getLevel3());
+			log.log(Level.WARNING,"Level4 : "+tottoo.getLevel4());
+			log.log(Level.WARNING,"Level5 : "+tottoo.getLevel5());
 			mgr.persist(user);
 		} catch(Exception e){
 			log.log(Level.SEVERE,"mgr in insertUser : "+mgr);

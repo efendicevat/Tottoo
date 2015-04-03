@@ -136,9 +136,6 @@
           "key" : {
             "$ref" : "Key"
           },
-          "gameState" : {
-            "$ref" : "GameState"
-          },
           "playTime" : {
             "type" : "string",
             "format" : "date-time"
@@ -172,11 +169,6 @@
             "type" : "string"
           }
         }
-      },
-      "GameState" : {
-        "id" : "GameState",
-        "type" : "string",
-        "enum" : [ "PASSLEVEL", "GAMEOVER", "TRYAGAIN", "BACKLEVEL" ]
       },
       "CollectionResponse_Interaction" : {
         "id" : "CollectionResponse_Interaction",

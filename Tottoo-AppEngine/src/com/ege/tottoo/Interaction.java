@@ -17,8 +17,8 @@ public class Interaction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Key key;
 	
-	@Enumerated(EnumType.STRING)
-    private GameState gameState;
+	//@Enumerated(EnumType.STRING)
+    //private GameState gameState;
 	
 	private Date playTime;
 
@@ -30,13 +30,13 @@ public class Interaction {
 		this.key = key;
 	}
 
-	public GameState getGameState() {
+	/*public GameState getGameState() {
 		return gameState;
 	}
 
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
-	}
+	}*/
 
 	public Date getPlayTime() {
 		return playTime;

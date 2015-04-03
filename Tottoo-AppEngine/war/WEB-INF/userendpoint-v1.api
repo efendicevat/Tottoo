@@ -150,9 +150,6 @@
           },
           "tottooList" : {
             "$ref" : "Tottoo"
-          },
-          "interaction" : {
-            "$ref" : "Interaction"
           }
         }
       },
@@ -222,27 +219,6 @@
             "type" : "string"
           }
         }
-      },
-      "Interaction" : {
-        "id" : "Interaction",
-        "type" : "object",
-        "properties" : {
-          "key" : {
-            "$ref" : "Key"
-          },
-          "gameState" : {
-            "$ref" : "GameState"
-          },
-          "playTime" : {
-            "type" : "string",
-            "format" : "date-time"
-          }
-        }
-      },
-      "GameState" : {
-        "id" : "GameState",
-        "type" : "string",
-        "enum" : [ "PASSLEVEL", "GAMEOVER", "TRYAGAIN", "BACKLEVEL" ]
       },
       "CollectionResponse_User" : {
         "id" : "CollectionResponse_User",

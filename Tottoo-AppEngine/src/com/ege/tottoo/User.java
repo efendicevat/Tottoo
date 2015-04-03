@@ -29,8 +29,8 @@ public class User {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	private Interaction interaction;
+	//@OneToMany(cascade = CascadeType.ALL)
+	//private Interaction interaction;
 	
 	public Key getKey() {
 		return key;
@@ -80,12 +80,12 @@ public class User {
 		this.currentLevel = currentLevel;
 	}
 
-	public Interaction getInteraction() {
+	/*public Interaction getInteraction() {
 		return interaction;
 	}
 
 	public void setInteraction(Interaction interaction) {
 		this.interaction = interaction;
-	}
+	}*/
 	
 }
