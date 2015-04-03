@@ -79,5 +79,13 @@ public class User {
 	public void setCurrentLevel(String currentLevel) {
 		this.currentLevel = currentLevel;
 	}
+
+	public Interaction getInteraction() {
+		return interaction;
+	}
+
+	public void setInteraction(Interaction interaction) {
+		this.interaction = interaction;
+	}
 	
 }
