@@ -175,12 +175,17 @@ public class UserEndpoint {
 		result.setPlayTime(Calendar.getInstance().getTime());
 		String gameState = "";
 		User user = getUser(id);
+		log.log(Level.WARNING,"identifier : "+identifier);
+		log.log(Level.WARNING,"user.getIdentifier() : "+user.getIdentifier());
 		if(user.getIdentifier().equalsIgnoreCase(identifier))
 		{
+			log.log(Level.WARNING,"currentlevel : "+currentlevel);
+			log.log(Level.WARNING,"user.getCurrentLevel() : "+user.getCurrentLevel());
 			if(user.getCurrentLevel().equalsIgnoreCase(currentlevel))
 			{
 				Tottoo t = user.getTottooList();
 				String levelx = getCurrentLevel(t,currentlevel);
+				log.log(Level.WARNING,"levelx : "+levelx);
 				if(levelx.contains("y")) {
 					if(currentlevel.equalsIgnoreCase("9")) {
 						gameState="WIN";
@@ -197,6 +202,7 @@ public class UserEndpoint {
 				} else {
 					gameState = "TRYAGAIN";
 				}
+				log.log(Level.WARNING,"gameState : "+gameState);
 			}
 		}
 		result.setGameState(gameState);
