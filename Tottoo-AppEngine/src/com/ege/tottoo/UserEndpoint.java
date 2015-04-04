@@ -174,14 +174,13 @@ public class UserEndpoint {
 	public Interaction play(@Named("id") Long id,@Named("identifier") String identifier,
 			@Named("currentlevel") int currentLevel,@Named("currentturn") int currentTurn)
 	{
-		/*EntityManager mgr = getEntityManager();
-		EntityTransaction txn = mgr.getTransaction();
-		txn.begin();*/
 		Interaction result = new Interaction();
-		//try {
+		EntityManager mgr = getEntityManager();
+		EntityTransaction txn = mgr.getTransaction();
+		try {
+			User user = mgr.find(User.class, id);
 			result.setPlayTime(Calendar.getInstance().getTime());
 			String gameState = "";
-			User user = getUser(id);
 			boolean isPlayable = PlayHelper.isPlayable(user, identifier, currentLevel, currentTurn);
 			if(isPlayable) {
 				Tottoo t = user.getTottooList();
@@ -211,17 +210,18 @@ public class UserEndpoint {
 				}
 			}
 			result.setGameState(gameState);
+			
+			txn.begin();
 			user.setCurrentLevel(currentLevel);
 			user.setCurrentTurn(currentTurn);
 			List<Interaction> interactions = user.getInteractions();
 			interactions.add(result);
 			user.setInteractions(interactions);
-			updateUser(user);
-			/*txn.commit();
+			txn.commit();
 		} finally {
 			if(txn.isActive())
 				txn.rollback();
-		}*/
+		}
 		return result;
 	}
 	
