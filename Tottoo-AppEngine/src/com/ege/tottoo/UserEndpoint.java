@@ -207,7 +207,7 @@ public class UserEndpoint {
 		result.setGameState(gameState);
 		user.setCurrentLevel(currentLevel);
 		user.setCurrentTurn(currentTurn);
-		user.setInteraction(result);
+		user.getInteractions().add(result);
 		updateUser(user);
 		return result;
 	}

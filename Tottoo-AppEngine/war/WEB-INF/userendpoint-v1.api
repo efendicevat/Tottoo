@@ -193,8 +193,11 @@
           "tottooList" : {
             "$ref" : "Tottoo"
           },
-          "interaction" : {
-            "$ref" : "Interaction"
+          "interactions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Interaction"
+            }
           }
         }
       },

@@ -1,5 +1,7 @@
 package com.ege.tottoo;
 
+import java.util.List;
+
 import javax.jdo.annotations.Persistent;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -36,9 +38,7 @@ public class User {
 	private Tottoo tottooList;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private Interaction interaction;
-
-	
+	private List<Interaction> interactions;
 	
 	public Key getKey() {
 		return key;
@@ -80,14 +80,6 @@ public class User {
 		this.tottooList = tottooList;
 	}
 
-	public Interaction getInteraction() {
-		return interaction;
-	}
-
-	public void setInteraction(Interaction interaction) {
-		this.interaction = interaction;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -118,6 +110,14 @@ public class User {
 
 	public void setCurrentLevel(int currentLevel) {
 		this.currentLevel = currentLevel;
+	}
+
+	public List<Interaction> getInteractions() {
+		return interactions;
+	}
+
+	public void setInteractions(List<Interaction> interactions) {
+		this.interactions = interactions;
 	}
 	
 }
