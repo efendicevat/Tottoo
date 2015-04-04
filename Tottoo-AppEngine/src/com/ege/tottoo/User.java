@@ -37,7 +37,7 @@ public class User {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Interaction> interactions;
 	
 	public Key getKey() {
