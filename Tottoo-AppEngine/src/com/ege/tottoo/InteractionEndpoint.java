@@ -99,9 +99,9 @@ public class InteractionEndpoint {
 	public Interaction insertInteraction(Interaction interaction) {
 		EntityManager mgr = getEntityManager();
 		try {
-			/*if (containsInteraction(interaction)) {
+			if (containsInteraction(interaction)) {
 				throw new EntityExistsException("Object already exists");
-			}*/
+			}
 			mgr.persist(interaction);
 		} finally {
 			mgr.close();

@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/9OPuRWlQu7v8LWG8fR0kp4MmP-Y\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/6QOGEeOrVyHxU4EkYMnjt2kY4M0\"",
  "discoveryVersion": "v1",
  "id": "interactionendpoint:v1",
  "name": "interactionendpoint",
@@ -98,6 +98,10 @@
     },
     "key": {
      "$ref": "Key"
+    },
+    "nextPlayableTime": {
+     "type": "string",
+     "format": "date-time"
     },
     "playTime": {
      "type": "string",

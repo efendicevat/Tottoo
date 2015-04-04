@@ -22,6 +22,8 @@ public class Interaction {
 	
 	private Date playTime;
 
+	private Date nextPlayableTime;
+	
 	private String gameState;
 	
 	public Key getKey() {
@@ -54,6 +56,14 @@ public class Interaction {
 
 	public void setGameState(String gameState) {
 		this.gameState = gameState;
+	}
+
+	public Date getNextPlayableTime() {
+		return nextPlayableTime;
+	}
+
+	public void setNextPlayableTime(Date nextPlayableTime) {
+		this.nextPlayableTime = nextPlayableTime;
 	}
 	
 	

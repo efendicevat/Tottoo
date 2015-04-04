@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/LMl6pSosT4ppVEVSyUY4RZl-EXM\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/Uqo6JDe39WLND2fe4SEVvASUCXg\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -99,6 +99,10 @@
     "key": {
      "$ref": "Key"
     },
+    "nextPlayableTime": {
+     "type": "string",
+     "format": "date-time"
+    },
     "playTime": {
      "type": "string",
      "format": "date-time"
@@ -176,8 +180,16 @@
    "id": "User",
    "type": "object",
    "properties": {
-    "currentLevel": {
+    "address": {
      "type": "string"
+    },
+    "currentLevel": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "currentTurn": {
+     "type": "integer",
+     "format": "int32"
     },
     "email": {
      "type": "string"
@@ -192,6 +204,9 @@
      "$ref": "Key"
     },
     "name": {
+     "type": "string"
+    },
+    "phone": {
      "type": "string"
     },
     "tottooList": {
@@ -262,12 +277,19 @@
   },
   "play": {
    "id": "userendpoint.play",
-   "path": "play/{id}/{identifier}/{currentlevel}",
+   "path": "play/{id}/{identifier}/{currentlevel}/{currentturn}",
    "httpMethod": "POST",
    "parameters": {
     "currentlevel": {
-     "type": "string",
+     "type": "integer",
      "required": true,
+     "format": "int32",
+     "location": "path"
+    },
+    "currentturn": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
      "location": "path"
     },
     "id": {
@@ -285,7 +307,8 @@
    "parameterOrder": [
     "id",
     "identifier",
-    "currentlevel"
+    "currentlevel",
+    "currentturn"
    ],
    "response": {
     "$ref": "Interaction"

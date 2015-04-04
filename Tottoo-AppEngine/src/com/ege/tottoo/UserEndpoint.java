@@ -172,7 +172,6 @@ public class UserEndpoint {
 	public Interaction play(@Named("id") Long id,@Named("identifier") String identifier,
 			@Named("currentlevel") int currentLevel,@Named("currentturn") int currentTurn)
 	{
-		InteractionEndpoint action = new InteractionEndpoint();
 		Interaction result = new Interaction();
 		result.setPlayTime(Calendar.getInstance().getTime());
 		String gameState = "";
@@ -206,7 +205,10 @@ public class UserEndpoint {
 			}
 		}
 		result.setGameState(gameState);
-		action.insertInteraction(result);
+		user.setCurrentLevel(currentLevel);
+		user.setCurrentTurn(currentTurn);
+		user.setInteraction(result);
+		updateUser(user);
 		return result;
 	}
 	
