@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 
+import com.ege.tottoo.helper.PlayHelper;
 import com.ege.tottoo.helper.TottooHelper;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -140,9 +141,9 @@ public class UserEndpoint {
 	public User updateUser(User user) {
 		EntityManager mgr = getEntityManager();
 		try {
-			if (!containsUser(user)) {
+			/*if (!containsUser(user)) {
 				throw new EntityNotFoundException("Object does not exist");
-			}
+			}*/
 			mgr.persist(user);
 		} finally {
 			mgr.close();
@@ -168,41 +169,40 @@ public class UserEndpoint {
 	}
 
 	@ApiMethod(name = "play")
-	public Interaction play(@Named("id") Long id,@Named("identifier") String identifier,@Named("currentlevel") String currentlevel)
+	public Interaction play(@Named("id") Long id,@Named("identifier") String identifier,
+			@Named("currentlevel") int currentLevel,@Named("currentturn") int currentTurn)
 	{
 		InteractionEndpoint action = new InteractionEndpoint();
 		Interaction result = new Interaction();
 		result.setPlayTime(Calendar.getInstance().getTime());
 		String gameState = "";
 		User user = getUser(id);
-		log.log(Level.WARNING,"identifier : "+identifier);
-		log.log(Level.WARNING,"user.getIdentifier() : "+user.getIdentifier());
-		if(user.getIdentifier().equalsIgnoreCase(identifier))
-		{
-			log.log(Level.WARNING,"currentlevel : "+currentlevel);
-			log.log(Level.WARNING,"user.getCurrentLevel() : "+user.getCurrentLevel());
-			if(user.getCurrentLevel().equalsIgnoreCase(currentlevel))
-			{
-				Tottoo t = user.getTottooList();
-				String levelx = getCurrentLevel(t,currentlevel);
-				log.log(Level.WARNING,"levelx : "+levelx);
-				if(levelx.contains("y")) {
-					if(currentlevel.equalsIgnoreCase("9")) {
-						gameState="WIN";
-					} else {
-						gameState="PASSLEVEL";
-					}
-				}
-				else if(levelx.contains("k")) {
-					if(currentlevel.equalsIgnoreCase("0")) {
-						gameState="GAMEOVER";
-					} else {
-						gameState="BACKLEVEL";
-					}
+		boolean isPlayable = PlayHelper.isPlayable(user, identifier, currentLevel, currentTurn);
+		if(isPlayable) {
+			Tottoo t = user.getTottooList();
+			String levelx = TottooHelper.getCurrentTottooLevel(t, currentLevel);
+			if(levelx.contains("y")) {
+				if(currentLevel==9) {
+					gameState="WIN";
 				} else {
-					gameState = "TRYAGAIN";
+					gameState="PASSLEVEL";
+					currentLevel++;
+					currentTurn = 0;
 				}
-				log.log(Level.WARNING,"gameState : "+gameState);
+			}
+			else if(levelx.contains("k")) {
+				if(currentLevel==0) {
+					gameState="GAMEOVER";
+					currentLevel = 0;
+					currentTurn = 0;
+				} else {
+					gameState="BACKLEVEL";
+					currentLevel--;
+					currentTurn = 0;
+				}
+			} else {
+				gameState = "TRYAGAIN";
+				currentTurn++;
 			}
 		}
 		result.setGameState(gameState);
@@ -210,32 +210,6 @@ public class UserEndpoint {
 		return result;
 	}
 	
-	private String getCurrentLevel(Tottoo t,String currentStatus) {
-		String levelx = "";
-		if(currentStatus.equalsIgnoreCase("0")) {
-			levelx = t.getLevel0();
-		} else if(currentStatus.equalsIgnoreCase("1")) {
-			levelx = t.getLevel1();
-		} else if(currentStatus.equalsIgnoreCase("2")) {
-			levelx = t.getLevel2();
-		} else if(currentStatus.equalsIgnoreCase("3")) {
-			levelx = t.getLevel3();
-		} else if(currentStatus.equalsIgnoreCase("4")) {
-			levelx = t.getLevel4();
-		} else if(currentStatus.equalsIgnoreCase("5")) {
-			levelx = t.getLevel5();
-		} else if(currentStatus.equalsIgnoreCase("6")) {
-			levelx = t.getLevel6();
-		} else if(currentStatus.equalsIgnoreCase("7")) {
-			levelx = t.getLevel7();
-		} else if(currentStatus.equalsIgnoreCase("8")) {
-			levelx = t.getLevel8();
-		} else if(currentStatus.equalsIgnoreCase("9")) {
-			levelx = t.getLevel9();
-		}
-		return levelx;
-	}
-
 	private boolean containsUser(User user) {
 		EntityManager mgr = getEntityManager();
 		boolean contains = true;

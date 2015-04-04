@@ -60,4 +60,30 @@ public class TottooHelper {
 	
 		return result;
 	}
+	
+	public static String getCurrentTottooLevel(Tottoo t,int currentLevel) {
+		String levelx = "";
+		if(currentLevel==0) {
+			levelx = t.getLevel0();
+		} else if(currentLevel==1) {
+			levelx = t.getLevel1();
+		} else if(currentLevel==2) {
+			levelx = t.getLevel2();
+		} else if(currentLevel==3) {
+			levelx = t.getLevel3();
+		} else if(currentLevel==4) {
+			levelx = t.getLevel4();
+		} else if(currentLevel==5) {
+			levelx = t.getLevel5();
+		} else if(currentLevel==6) {
+			levelx = t.getLevel6();
+		} else if(currentLevel==7) {
+			levelx = t.getLevel7();
+		} else if(currentLevel==8) {
+			levelx = t.getLevel8();
+		} else if(currentLevel==9) {
+			levelx = t.getLevel9();
+		}
+		return levelx;
+	}
 }

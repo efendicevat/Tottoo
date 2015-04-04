@@ -24,13 +24,21 @@ public class User {
 	
 	private String name;
 	
-	private String currentLevel;
+	private String phone;
+	
+	private String address;
+	
+	private int currentTurn;
+	
+	private int currentLevel;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	private Interaction interaction;
+
+	
 	
 	public Key getKey() {
 		return key;
@@ -72,20 +80,44 @@ public class User {
 		this.tottooList = tottooList;
 	}
 
-	public String getCurrentLevel() {
-		return currentLevel;
-	}
-
-	public void setCurrentLevel(String currentLevel) {
-		this.currentLevel = currentLevel;
-	}
-
 	public Interaction getInteraction() {
 		return interaction;
 	}
 
 	public void setInteraction(Interaction interaction) {
 		this.interaction = interaction;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public int getCurrentTurn() {
+		return currentTurn;
+	}
+
+	public void setCurrentTurn(int currentTurn) {
+		this.currentTurn = currentTurn;
+	}
+
+	public int getCurrentLevel() {
+		return currentLevel;
+	}
+
+	public void setCurrentLevel(int currentLevel) {
+		this.currentLevel = currentLevel;
 	}
 	
 }

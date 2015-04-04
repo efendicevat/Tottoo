@@ -90,7 +90,7 @@
       }
     },
     "userendpoint.play" : {
-      "path" : "play/{id}/{identifier}/{currentlevel}",
+      "path" : "play/{id}/{identifier}/{currentlevel}/{currentturn}",
       "httpMethod" : "POST",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
@@ -108,7 +108,11 @@
             "required" : true
           },
           "currentlevel" : {
-            "type" : "string",
+            "type" : "int32",
+            "required" : true
+          },
+          "currentturn" : {
+            "type" : "int32",
             "required" : true
           }
         },
@@ -174,8 +178,17 @@
           "name" : {
             "type" : "string"
           },
-          "currentLevel" : {
+          "phone" : {
             "type" : "string"
+          },
+          "address" : {
+            "type" : "string"
+          },
+          "currentTurn" : {
+            "type" : "integer"
+          },
+          "currentLevel" : {
+            "type" : "integer"
           },
           "tottooList" : {
             "$ref" : "Tottoo"
