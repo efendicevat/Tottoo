@@ -145,7 +145,7 @@
             "format" : "date-time"
           },
           "gameState" : {
-            "type" : "string"
+            "$ref" : "GameState"
           }
         }
       },
@@ -173,6 +173,18 @@
             "type" : "boolean"
           },
           "namespace" : {
+            "type" : "string"
+          }
+        }
+      },
+      "GameState" : {
+        "id" : "GameState",
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "$ref" : "Key"
+          },
+          "state" : {
             "type" : "string"
           }
         }

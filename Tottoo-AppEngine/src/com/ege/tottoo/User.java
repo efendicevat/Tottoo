@@ -2,7 +2,6 @@ package com.ege.tottoo;
 
 import java.util.List;
 
-import javax.jdo.annotations.Persistent;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

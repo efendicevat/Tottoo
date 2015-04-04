@@ -284,6 +284,18 @@
             "format" : "date-time"
           },
           "gameState" : {
+            "$ref" : "GameState"
+          }
+        }
+      },
+      "GameState" : {
+        "id" : "GameState",
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "$ref" : "Key"
+          },
+          "state" : {
             "type" : "string"
           }
         }
@@ -325,7 +337,7 @@
       },
       "com.ege.tottoo.UserEndpoint.play" : {
         "response" : {
-          "$ref" : "Interaction"
+          "$ref" : "GameState"
         }
       },
       "com.ege.tottoo.UserEndpoint.updateUser" : {

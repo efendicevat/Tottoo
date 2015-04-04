@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/Uqo6JDe39WLND2fe4SEVvASUCXg\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/Yjv-tptdK7nPttHl2bwOBaLdd0U\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -89,12 +89,24 @@
     }
    }
   },
+  "GameState": {
+   "id": "GameState",
+   "type": "object",
+   "properties": {
+    "key": {
+     "$ref": "Key"
+    },
+    "state": {
+     "type": "string"
+    }
+   }
+  },
   "Interaction": {
    "id": "Interaction",
    "type": "object",
    "properties": {
     "gameState": {
-     "type": "string"
+     "$ref": "GameState"
     },
     "key": {
      "$ref": "Key"
@@ -197,8 +209,11 @@
     "identifier": {
      "type": "string"
     },
-    "interaction": {
-     "$ref": "Interaction"
+    "interactions": {
+     "type": "array",
+     "items": {
+      "$ref": "Interaction"
+     }
     },
     "key": {
      "$ref": "Key"
@@ -311,7 +326,7 @@
     "currentturn"
    ],
    "response": {
-    "$ref": "Interaction"
+    "$ref": "GameState"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
