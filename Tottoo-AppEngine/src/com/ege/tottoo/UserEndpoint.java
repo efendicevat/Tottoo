@@ -185,26 +185,34 @@ public class UserEndpoint {
 			if(isPlayable) {
 				Tottoo t = user.getTottooList();
 				String levelx = TottooHelper.getCurrentTottooLevel(t, currentLevel);
-				if(levelx.contains("y")) {
-					if(currentLevel==9) {
-						gameState="WIN";
+				String[] temp = levelx.split("-");
+				int levelTurn = Integer.valueOf(temp[1]);
+				if(levelTurn==currentTurn) {
+					if(levelx.contains("y")) {
+						if(currentLevel==9) {
+							gameState="WIN";
+						} else {
+							gameState="PASSLEVEL";
+							currentLevel++;
+							currentTurn = 0;
+						}
+					}
+					else if(levelx.contains("k")) {
+						if(currentLevel==0) {
+							gameState="GAMEOVER";
+							currentLevel = 0;
+							currentTurn = 0;
+						} else {
+							gameState="BACKLEVEL";
+							currentLevel--;
+							currentTurn = 0;
+						}
 					} else {
-						gameState="PASSLEVEL";
-						currentLevel++;
-						currentTurn = 0;
+						gameState = "TRYAGAIN";
+						currentTurn++;
 					}
 				}
-				else if(levelx.contains("k")) {
-					if(currentLevel==0) {
-						gameState="GAMEOVER";
-						currentLevel = 0;
-						currentTurn = 0;
-					} else {
-						gameState="BACKLEVEL";
-						currentLevel--;
-						currentTurn = 0;
-					}
-				} else {
+				else {
 					gameState = "TRYAGAIN";
 					currentTurn++;
 				}
