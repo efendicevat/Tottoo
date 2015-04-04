@@ -35,7 +35,7 @@ public class User {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	private Interaction interaction;
 
 	
