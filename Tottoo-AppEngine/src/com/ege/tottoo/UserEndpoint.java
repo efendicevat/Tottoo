@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import com.ege.tottoo.helper.PlayHelper;
@@ -172,43 +173,51 @@ public class UserEndpoint {
 	public Interaction play(@Named("id") Long id,@Named("identifier") String identifier,
 			@Named("currentlevel") int currentLevel,@Named("currentturn") int currentTurn)
 	{
+		EntityManager mgr = getEntityManager();
+		EntityTransaction txn = mgr.getTransaction();
+		txn.begin();
 		Interaction result = new Interaction();
-		result.setPlayTime(Calendar.getInstance().getTime());
-		String gameState = "";
-		User user = getUser(id);
-		boolean isPlayable = PlayHelper.isPlayable(user, identifier, currentLevel, currentTurn);
-		if(isPlayable) {
-			Tottoo t = user.getTottooList();
-			String levelx = TottooHelper.getCurrentTottooLevel(t, currentLevel);
-			if(levelx.contains("y")) {
-				if(currentLevel==9) {
-					gameState="WIN";
+		try {
+			result.setPlayTime(Calendar.getInstance().getTime());
+			String gameState = "";
+			User user = getUser(id);
+			boolean isPlayable = PlayHelper.isPlayable(user, identifier, currentLevel, currentTurn);
+			if(isPlayable) {
+				Tottoo t = user.getTottooList();
+				String levelx = TottooHelper.getCurrentTottooLevel(t, currentLevel);
+				if(levelx.contains("y")) {
+					if(currentLevel==9) {
+						gameState="WIN";
+					} else {
+						gameState="PASSLEVEL";
+						currentLevel++;
+						currentTurn = 0;
+					}
+				}
+				else if(levelx.contains("k")) {
+					if(currentLevel==0) {
+						gameState="GAMEOVER";
+						currentLevel = 0;
+						currentTurn = 0;
+					} else {
+						gameState="BACKLEVEL";
+						currentLevel--;
+						currentTurn = 0;
+					}
 				} else {
-					gameState="PASSLEVEL";
-					currentLevel++;
-					currentTurn = 0;
+					gameState = "TRYAGAIN";
+					currentTurn++;
 				}
 			}
-			else if(levelx.contains("k")) {
-				if(currentLevel==0) {
-					gameState="GAMEOVER";
-					currentLevel = 0;
-					currentTurn = 0;
-				} else {
-					gameState="BACKLEVEL";
-					currentLevel--;
-					currentTurn = 0;
-				}
-			} else {
-				gameState = "TRYAGAIN";
-				currentTurn++;
-			}
+			result.setGameState(gameState);
+			user.setCurrentLevel(currentLevel);
+			user.setCurrentTurn(currentTurn);
+			user.getInteractions().add(result);
+			txn.commit();
+		} finally {
+			if(txn.isActive())
+				txn.rollback();
 		}
-		result.setGameState(gameState);
-		user.setCurrentLevel(currentLevel);
-		user.setCurrentTurn(currentTurn);
-		user.getInteractions().add(result);
-		updateUser(user);
 		return result;
 	}
 	

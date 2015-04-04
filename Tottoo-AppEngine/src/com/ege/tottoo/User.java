@@ -3,8 +3,10 @@ package com.ege.tottoo;
 import java.util.List;
 
 import javax.jdo.annotations.Persistent;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,6 +39,7 @@ public class User {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
+	@Basic(fetch = FetchType.EAGER)
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Interaction> interactions;
 	
