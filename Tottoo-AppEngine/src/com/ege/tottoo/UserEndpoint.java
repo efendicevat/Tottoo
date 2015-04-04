@@ -86,6 +86,7 @@ public class UserEndpoint {
 		User user = null;
 		try {
 			user = mgr.find(User.class, id);
+			log.log(Level.WARNING,"interactions : "+user.getInteractions());
 		} finally {
 			mgr.close();
 		}
