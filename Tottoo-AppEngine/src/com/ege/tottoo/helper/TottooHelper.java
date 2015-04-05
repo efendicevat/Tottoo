@@ -7,7 +7,7 @@ import com.ege.tottoo.listadapter.SortedTottooList;
 
 public class TottooHelper {
 
-	public static void generateLevels(Tottoo tottoo) {
+	public static void generateAllLevels(Tottoo tottoo) {
 		tottoo.setLevel0(generateLevels(1,1,10)); 
 		tottoo.setLevel1(generateLevels(1,1,100));
 		tottoo.setLevel2(generateLevels(1,1,100)); 
@@ -18,6 +18,66 @@ public class TottooHelper {
 		tottoo.setLevel7(generateLevels(1,1,10000));
 		tottoo.setLevel8(generateLevels(1,1,10000));
 		tottoo.setLevel9(generateLevels(1,1,10000));
+	}
+	
+	public static void generateLevelByMinLevel(Tottoo tottoo,int level) {
+		if(level==0) {
+			generateAllLevels(tottoo);
+		} else if(level==1) {
+			tottoo.setLevel1(generateLevels(1,1,100));
+			tottoo.setLevel2(generateLevels(1,1,100)); 
+			tottoo.setLevel3(generateLevels(1,1,1000));
+			tottoo.setLevel4(generateLevels(1,1,1000));
+			tottoo.setLevel5(generateLevels(1,1,1000));
+			tottoo.setLevel6(generateLevels(1,1,1000));
+			tottoo.setLevel7(generateLevels(1,1,10000));
+			tottoo.setLevel8(generateLevels(1,1,10000));
+			tottoo.setLevel9(generateLevels(1,1,10000));
+		} else if(level==2) {
+			tottoo.setLevel2(generateLevels(1,1,100)); 
+			tottoo.setLevel3(generateLevels(1,1,1000));
+			tottoo.setLevel4(generateLevels(1,1,1000));
+			tottoo.setLevel5(generateLevels(1,1,1000));
+			tottoo.setLevel6(generateLevels(1,1,1000));
+			tottoo.setLevel7(generateLevels(1,1,10000));
+			tottoo.setLevel8(generateLevels(1,1,10000));
+			tottoo.setLevel9(generateLevels(1,1,10000));
+		} else if(level==3) {
+			tottoo.setLevel3(generateLevels(1,1,1000));
+			tottoo.setLevel4(generateLevels(1,1,1000));
+			tottoo.setLevel5(generateLevels(1,1,1000));
+			tottoo.setLevel6(generateLevels(1,1,1000));
+			tottoo.setLevel7(generateLevels(1,1,10000));
+			tottoo.setLevel8(generateLevels(1,1,10000));
+			tottoo.setLevel9(generateLevels(1,1,10000));
+		} else if(level==4) {
+			tottoo.setLevel4(generateLevels(1,1,1000));
+			tottoo.setLevel5(generateLevels(1,1,1000));
+			tottoo.setLevel6(generateLevels(1,1,1000));
+			tottoo.setLevel7(generateLevels(1,1,10000));
+			tottoo.setLevel8(generateLevels(1,1,10000));
+			tottoo.setLevel9(generateLevels(1,1,10000));
+		} else if(level==5) {
+			tottoo.setLevel5(generateLevels(1,1,1000));
+			tottoo.setLevel6(generateLevels(1,1,1000));
+			tottoo.setLevel7(generateLevels(1,1,10000));
+			tottoo.setLevel8(generateLevels(1,1,10000));
+			tottoo.setLevel9(generateLevels(1,1,10000));
+		} else if(level==6) {
+			tottoo.setLevel6(generateLevels(1,1,1000));
+			tottoo.setLevel7(generateLevels(1,1,10000));
+			tottoo.setLevel8(generateLevels(1,1,10000));
+			tottoo.setLevel9(generateLevels(1,1,10000));
+		} else if(level==7) {
+			tottoo.setLevel7(generateLevels(1,1,10000));
+			tottoo.setLevel8(generateLevels(1,1,10000));
+			tottoo.setLevel9(generateLevels(1,1,10000));
+		} else if(level==8) {
+			tottoo.setLevel8(generateLevels(1,1,10000));
+			tottoo.setLevel9(generateLevels(1,1,10000));
+		} else if(level==9) {
+			tottoo.setLevel9(generateLevels(1,1,10000));
+		}
 	}
 	
 	private static String generateLevels(int yCount,int kCount,int seed) {

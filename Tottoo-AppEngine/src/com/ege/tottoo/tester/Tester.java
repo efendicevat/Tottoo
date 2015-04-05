@@ -31,7 +31,7 @@ public class Tester {
 		
 		while(count<1000) {
 			t = new Tottoo();
-			TottooHelper.generateLevels(t);
+			TottooHelper.generateAllLevels(t);
 			if(t.getLevel0().contains("y")
 					&& t.getLevel1().contains("y")
 					&& t.getLevel2().contains("y")

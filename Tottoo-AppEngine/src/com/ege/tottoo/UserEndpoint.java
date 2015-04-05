@@ -105,7 +105,8 @@ public class UserEndpoint {
 		EntityManager mgr = getEntityManager();
 		log.log(Level.WARNING,"mgr in insertUser : "+mgr);
 		try {
-			Tottoo tottoo = generateTottoo();
+			Tottoo tottoo = new Tottoo();
+			TottooHelper.generateAllLevels(tottoo);
 			user.setTottooList(tottoo);
 			log.log(Level.WARNING,"Level0 : "+tottoo.getLevel0());
 			log.log(Level.WARNING,"Level1 : "+tottoo.getLevel1());
@@ -121,13 +122,6 @@ public class UserEndpoint {
 			mgr.close();
 		}
 		return user.getKey();
-	}
-
-	
-	private Tottoo generateTottoo() {
-		Tottoo tottoo = new Tottoo();
-		TottooHelper.generateLevels(tottoo);
-		return tottoo;
 	}
 
 	/**
@@ -201,10 +195,16 @@ public class UserEndpoint {
 						if(currentLevel==0) {
 							gameState.setState("GAMEOVER");
 							currentLevel = 0;
+							Tottoo tottoo = new Tottoo();
+							TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+							user.setTottooList(tottoo);
 							currentTurn = 1;
 						} else {
 							gameState.setState("BACKLEVEL");
 							currentLevel--;
+							Tottoo tottoo = new Tottoo();
+							TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+							user.setTottooList(tottoo);
 							currentTurn = 1;
 						}
 					} else {
