@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import com.ege.tottoo.exceptions.NotPlayableException;
 import com.ege.tottoo.helper.PlayHelper;
 import com.ege.tottoo.helper.TottooHelper;
 import com.google.api.server.spi.config.Api;
@@ -165,7 +166,7 @@ public class UserEndpoint {
 
 	@ApiMethod(name = "play")
 	public GameState play(@Named("id") Long id,@Named("identifier") String identifier,
-			@Named("currentlevel") int currentLevel,@Named("currentturn") int currentTurn)
+			@Named("currentlevel") int currentLevel,@Named("currentturn") int currentTurn) throws NotPlayableException
 	{
 		Interaction action = new Interaction();
 		GameState gameState = new GameState();
@@ -217,6 +218,10 @@ public class UserEndpoint {
 					currentTurn++;
 				}
 			}
+			else {
+				mgr.close();
+				throw new NotPlayableException("Play option is forbidden!..");
+			}
 			action.setGameState(gameState);
 			
 			txn.begin();
@@ -229,6 +234,7 @@ public class UserEndpoint {
 		} finally {
 			if(txn.isActive())
 				txn.rollback();
+			mgr.close();
 		}
 		return gameState;
 	}
