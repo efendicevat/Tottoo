@@ -219,7 +219,6 @@ public class UserEndpoint {
 				}
 			}
 			else {
-				mgr.close();
 				throw new NotPlayableException("Play option is forbidden!..");
 			}
 			action.setGameState(gameState);
