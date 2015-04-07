@@ -205,6 +205,7 @@ public class UserEndpoint {
 						} else {
 							gameState.setState("TRYAGAIN");
 							playTurn++;
+							user.setCurrentTurn(playTurn);
 						}
 					} else { //NO BONUS
 						log.info("NO BONUS");
@@ -216,6 +217,7 @@ public class UserEndpoint {
 						} else {
 							gameState.setState("TRYAGAIN");
 							playTurn++;
+							user.setCurrentTurn(playTurn);
 						}
 					}
 				}
@@ -225,8 +227,6 @@ public class UserEndpoint {
 				action.setGameState(gameState);
 				
 				txn.begin();
-				user.setCurrentLevel(playLevel);
-				user.setCurrentTurn(playTurn);
 				List<Interaction> interactions = user.getInteractions();
 				interactions.add(action);
 				user.setInteractions(interactions);
@@ -314,6 +314,8 @@ public class UserEndpoint {
 			gameState.setState("TRYAGAIN"); //defensive
 			currentTurn++;
 		}
+		user.setCurrentLevel(currentLevel);
+		user.setCurrentTurn(currentTurn);
 	}
 	
 	private boolean containsUser(User user) {
