@@ -35,6 +35,8 @@ public class User {
 	
 	private int currentLevel;
 	
+	private int totalSpeedupCount;
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
@@ -120,6 +122,14 @@ public class User {
 
 	public void setInteractions(List<Interaction> interactions) {
 		this.interactions = interactions;
+	}
+
+	public int getTotalSpeedupCount() {
+		return totalSpeedupCount;
+	}
+
+	public void setTotalSpeedupCount(int totalSpeedupCount) {
+		this.totalSpeedupCount = totalSpeedupCount;
 	}
 	
 }

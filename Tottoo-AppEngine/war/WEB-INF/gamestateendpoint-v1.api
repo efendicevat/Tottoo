@@ -27,22 +27,6 @@
   "ownerName" : "ege.com",
   "packagePath" : "tottoo",
   "methods" : {
-    "gamestateendpoint.updateGameState" : {
-      "path" : "gamestate",
-      "httpMethod" : "PUT",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.ege.tottoo.GameStateEndpoint.updateGameState",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "gamestateendpoint.removeGameState" : {
       "path" : "gamestate/{id}",
       "httpMethod" : "DELETE",
@@ -62,6 +46,22 @@
       },
       "response" : {
         "body" : "empty"
+      }
+    },
+    "gamestateendpoint.updateGameState" : {
+      "path" : "gamestate",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.GameStateEndpoint.updateGameState",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
       }
     },
     "gamestateendpoint.getGameState" : {
@@ -161,11 +161,11 @@
           "parent" : {
             "$ref" : "Key"
           },
-          "complete" : {
-            "type" : "boolean"
-          },
           "namespace" : {
             "type" : "string"
+          },
+          "complete" : {
+            "type" : "boolean"
           }
         }
       },
@@ -186,6 +186,8 @@
       }
     },
     "methods" : {
+      "com.ege.tottoo.GameStateEndpoint.removeGameState" : {
+      },
       "com.ege.tottoo.GameStateEndpoint.updateGameState" : {
         "request" : {
           "$ref" : "GameState"
@@ -193,8 +195,6 @@
         "response" : {
           "$ref" : "GameState"
         }
-      },
-      "com.ege.tottoo.GameStateEndpoint.removeGameState" : {
       },
       "com.ege.tottoo.GameStateEndpoint.getGameState" : {
         "response" : {

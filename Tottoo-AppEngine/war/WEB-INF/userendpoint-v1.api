@@ -190,6 +190,9 @@
           "currentLevel" : {
             "type" : "integer"
           },
+          "totalSpeedupCount" : {
+            "type" : "integer"
+          },
           "tottooList" : {
             "$ref" : "Tottoo"
           },
@@ -221,11 +224,11 @@
           "parent" : {
             "$ref" : "Key"
           },
-          "complete" : {
-            "type" : "boolean"
-          },
           "namespace" : {
             "type" : "string"
+          },
+          "complete" : {
+            "type" : "boolean"
           }
         }
       },

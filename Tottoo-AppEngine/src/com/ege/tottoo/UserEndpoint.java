@@ -11,7 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import com.ege.tottoo.exceptions.NotDefinedBonusException;
 import com.ege.tottoo.exceptions.NotPlayableException;
+import com.ege.tottoo.exceptions.TottooException;
 import com.ege.tottoo.helper.PlayHelper;
 import com.ege.tottoo.helper.TottooHelper;
 import com.google.api.server.spi.config.Api;
@@ -104,22 +106,14 @@ public class UserEndpoint {
 	@ApiMethod(name = "insertUser")
 	public Key insertUser(User user) {
 		EntityManager mgr = getEntityManager();
-		log.log(Level.WARNING,"mgr in insertUser : "+mgr);
 		try {
 			Tottoo tottoo = new Tottoo();
 			TottooHelper.generateAllLevels(tottoo);
 			user.setTottooList(tottoo);
-			log.log(Level.WARNING,"Level0 : "+tottoo.getLevel0());
-			log.log(Level.WARNING,"Level1 : "+tottoo.getLevel1());
-			log.log(Level.WARNING,"Level2 : "+tottoo.getLevel2());
-			log.log(Level.WARNING,"Level3 : "+tottoo.getLevel3());
-			log.log(Level.WARNING,"Level4 : "+tottoo.getLevel4());
-			log.log(Level.WARNING,"Level5 : "+tottoo.getLevel5());
 			mgr.persist(user);
 		} catch(Exception e){
 			log.log(Level.SEVERE,"mgr in insertUser : "+mgr);
 		}finally {
-			log.log(Level.WARNING,"mgr in insertUser : "+mgr);
 			mgr.close();
 		}
 		return user.getKey();
@@ -165,77 +159,147 @@ public class UserEndpoint {
 	}
 
 	@ApiMethod(name = "play")
-	public GameState play(@Named("id") Long id,@Named("identifier") String identifier,
-			@Named("currentlevel") int currentLevel,@Named("currentturn") int currentTurn) throws NotPlayableException
+	public GameState play(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
+			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile) throws TottooException
 	{
 		Interaction action = new Interaction();
 		GameState gameState = new GameState();
 		EntityManager mgr = getEntityManager();
 		EntityTransaction txn = mgr.getTransaction();
+		int speedupCount = 0;
 		try {
-			User user = mgr.find(User.class, id);
-			action.setPlayTime(Calendar.getInstance().getTime());
-			boolean isPlayable = PlayHelper.isPlayable(user, identifier, currentLevel, currentTurn);
-			if(isPlayable) {
-				Tottoo t = user.getTottooList();
-				String levelx = TottooHelper.getCurrentTottooLevel(t, currentLevel);
-				String[] temp = levelx.split("-");
-				int levelTurn = Integer.valueOf(temp[1]);
-				
-				if(levelTurn==currentTurn) {
-					if(levelx.contains("y")) {
-						if(currentLevel==9) {
-							gameState.setState("WIN");
+			User user = mgr.find(User.class, idOnMobile);
+			if(user==null) {
+				throw new NotPlayableException("Play option is forbidden!..");
+			} else {
+				speedupCount = user.getTotalSpeedupCount();
+				action.setPlayTime(Calendar.getInstance().getTime());
+				boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile);
+				if(isPlayable) {
+					Tottoo tottooOnCloud = user.getTottooList();
+					String currentLevelOnCloud = TottooHelper.getCurrentTottooLevel(tottooOnCloud, currentLevelOnMobile);
+					if(currentLevelOnCloud.contains(",")) { //HAS BONUS
+						log.info("HAS BONUS");
+						String[] tmp = currentLevelOnCloud.split(",");
+						String state = tmp[0];
+						String others = tmp[1];
+						if(state.contains("speedup")) {
+							String[] tmp2 = state.split("X");
+							int span = Integer.valueOf(tmp2[1]);
+							speedupCount +=span;
+							user.setTotalSpeedupCount(speedupCount);
+							TottooHelper.setCurrentTottooLevel(tottooOnCloud, currentLevelOnMobile, others);
+							user.setTottooList(tottooOnCloud);
+							gameState.setState("SPEEDUPX"+span);
+							currentTurnOnMobile++;
 						} else {
-							gameState.setState("PASSLEVEL");
-							currentLevel++;
-							currentTurn = 1;
+							throw new NotDefinedBonusException("Not Defined Bonus. Option is forbidden!..");
 						}
-					}
-					else if(levelx.contains("k")) {
-						if(currentLevel==0) {
-							gameState.setState("GAMEOVER");
-							currentLevel = 0;
-							Tottoo tottoo = new Tottoo();
-							TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
-							user.setTottooList(tottoo);
-							currentTurn = 1;
-						} else {
-							gameState.setState("BACKLEVEL");
-							currentLevel--;
-							Tottoo tottoo = new Tottoo();
-							TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
-							user.setTottooList(tottoo);
-							currentTurn = 1;
+					} else { //NO BONUS
+						log.info("NO BONUS");
+						String[] tmp = currentLevelOnCloud.split("-");
+						String state = tmp[0];
+						int currentTurnOnCloud = Integer.valueOf(tmp[1]);
+						if(currentTurnOnCloud==currentTurnOnMobile) {
+							setGameState(user,currentLevelOnCloud,gameState,currentLevelOnMobile,currentTurnOnMobile);
 						}
-					} else {
-						gameState.setState("TRYAGAIN");
-						currentTurn++;
 					}
 				}
 				else {
-					gameState.setState("TRYAGAIN");
-					currentTurn++;
+					throw new NotPlayableException("Play option is forbidden!..");
 				}
+				action.setGameState(gameState);
+				
+				txn.begin();
+				user.setCurrentLevel(currentLevelOnMobile);
+				user.setCurrentTurn(currentTurnOnMobile);
+				List<Interaction> interactions = user.getInteractions();
+				interactions.add(action);
+				user.setInteractions(interactions);
+				txn.commit();
 			}
-			else {
-				throw new NotPlayableException("Play option is forbidden!..");
-			}
-			action.setGameState(gameState);
-			
-			txn.begin();
-			user.setCurrentLevel(currentLevel);
-			user.setCurrentTurn(currentTurn);
-			List<Interaction> interactions = user.getInteractions();
-			interactions.add(action);
-			user.setInteractions(interactions);
-			txn.commit();
 		} finally {
 			if(txn.isActive())
 				txn.rollback();
 			mgr.close();
 		}
 		return gameState;
+	}
+	
+	private void setGameState(User user,String levelx,GameState gameState,int currentLevel,int currentTurn) {
+		if(levelx.contains("levelup")) {
+			if(currentLevel==9) {
+				gameState.setState("WIN");
+			} else {
+				gameState.setState("PASSLEVEL");
+				currentLevel++;
+				currentTurn = 1;
+			}
+		}
+		else if(levelx.contains("bonus")) {
+			if(currentLevel==9) {
+				gameState.setState("WIN");
+			} else {
+				gameState.setState("2XPASSLEVEL");
+				currentLevel++;
+				currentTurn = 1;
+			}
+		}
+		else if(levelx.contains("backstep")) {
+			if(currentLevel==0) {
+				gameState.setState("GAMEOVER");
+				currentLevel = 0;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+			} else {
+				gameState.setState("BACKLEVEL");
+				currentLevel--;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+			}
+		}
+		else if(levelx.contains("smalltrap")) {
+			if(currentLevel==0) {
+				gameState.setState("GAMEOVER");
+				currentLevel = 0;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+			} else {
+				gameState.setState("2XBACKLEVEL");
+				currentLevel--;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+			}
+		}
+		else if(levelx.contains("bigtrap")) {
+			if(currentLevel==0) {
+				gameState.setState("GAMEOVER");
+				currentLevel = 0;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+			} else {
+				gameState.setState("3XBACKLEVEL");
+				currentLevel--;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+			}
+		}
+		else {
+			gameState.setState("TRYAGAIN"); //defensive
+			currentTurn++;
+		}
 	}
 	
 	private boolean containsUser(User user) {

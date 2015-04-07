@@ -11,22 +11,16 @@ public class PlayHelper {
 	
 	public static boolean isPlayable(User user,String identifier,int currentLevel,int currentTurn) {
 		boolean isPlayable = false;
-		log.log(Level.WARNING,"user.getIdentifier() : "+user.getIdentifier());
-		log.log(Level.WARNING,"identifier : "+identifier);
 		if(user.getIdentifier().equalsIgnoreCase(identifier))
 		{
-			log.log(Level.WARNING,"user.getCurrentLevel() : "+user.getCurrentLevel());
-			log.log(Level.WARNING,"currentLevel : "+currentLevel);
 			if(user.getCurrentLevel()==currentLevel)
 			{
-				log.log(Level.WARNING,"user.getCurrentTurn() : "+user.getCurrentTurn());
-				log.log(Level.WARNING,"currentTurn : "+currentTurn);
 				if(user.getCurrentTurn()==currentTurn) {
 					isPlayable = true;
 				}
 			}
 		}
-		log.log(Level.WARNING,"isPlayable : "+isPlayable);
+		log.log(Level.INFO,"isPlayable : "+isPlayable);
 		return isPlayable;
 	}
 }
