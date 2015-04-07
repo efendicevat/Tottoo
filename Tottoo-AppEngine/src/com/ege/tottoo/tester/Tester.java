@@ -2,180 +2,164 @@ package com.ege.tottoo.tester;
 
 import com.ege.tottoo.GameState;
 import com.ege.tottoo.Tottoo;
+import com.ege.tottoo.User;
+import com.ege.tottoo.exceptions.NotDefinedBonusException;
 import com.ege.tottoo.helper.TottooHelper;
 
 public class Tester {
 
-	public static Tottoo t;
-	
-	public static int currentLevel = 0;
-	
-	public static int currentTurn = 1;
+	public static User user;
 	
 	public static void main(String[] args) {
+		
+		user = new User();
+		
 		tryIt();
 
 		while(true) {
-			play(currentLevel,currentTurn);
+			play(user.getCurrentLevel(),user.getCurrentTurn());
 		}
 	}
 	
-	private static void findSpeedup(String levelx,int _currentLevel,int _currentTurn,GameState gameState) {
-		String[] temp = levelx.split(",");
-		int levelTurn = 0;
-		boolean isSpeedupFound = false;
-		int speedUpSpan = 0;
-		boolean isSpeedupExpired = true;
-		for (int i = 0; i < temp.length-1; i++) {
-			String speedup = temp[i];
-			levelTurn = Integer.valueOf(speedup.split("-")[1]);
-			if(levelTurn==_currentTurn) {
-				isSpeedupFound = true;
-				speedUpSpan = Integer.valueOf(speedup.split("-")[0].split("X")[1]);
-				isSpeedupExpired = false;
-				break;
-			} else if(_currentTurn<levelTurn) {
-				isSpeedupExpired = false;
-			}
-		}
-		if(isSpeedupFound) {
-			boolean isFinalStateFound = false;
-			for (int i = 0; i < speedUpSpan; i++) {
-				_currentTurn++;
-				String finalState = temp[temp.length-1];
-				levelTurn = Integer.valueOf(finalState.split("-")[1]);
-				if(levelTurn==_currentTurn) {
-					isFinalStateFound = true;
-					setGameState(levelx,gameState,_currentLevel,_currentTurn);
-					break;
-				}
-			}
-			if(!isFinalStateFound) {
-				gameState.setState("SPEEDUPX"+speedUpSpan);
-				currentTurn = _currentTurn;
-			}
-		} else if(isSpeedupExpired) {
-			String finalState = temp[temp.length-1];
-			levelTurn = Integer.valueOf(finalState.split("-")[1]);
-			if(levelTurn==_currentTurn) {
-				setGameState(levelx,gameState,_currentLevel,_currentTurn);
-			} else {
-				_currentTurn++;
-				currentTurn = _currentTurn;
-			}
-		} else {
-			gameState.setState("TRYAGAIN"); //defensive
-			_currentTurn++;
-			currentTurn = _currentTurn;
-		}
-	}
 	
 	private static void play(int _currentLevel,int _currentTurn) {
-		String levelx = TottooHelper.getCurrentTottooLevel(t, _currentLevel);
 		GameState gameState = new GameState();
-		String[] temp = null;
-		int levelTurn = 0;
-		if(levelx.contains("speedupX"))
-		{
-			findSpeedup(levelx, _currentLevel, _currentTurn, gameState);
-		}
-		else {
-			temp = levelx.split("-");
-			levelTurn = Integer.valueOf(temp[1]);
-			
-			if(levelTurn==_currentTurn) {
-				setGameState(levelx,gameState,_currentLevel,_currentTurn);
+		int speedupCount = 0;
+		
+		String currentLevelOnCloud = TottooHelper.getCurrentTottooLevel(user.getTottooList(), _currentLevel);
+		
+		if(currentLevelOnCloud.contains(",")) { //HAS BONUS
+			String[] tmp = currentLevelOnCloud.split(",");
+			String state = tmp[0];
+			String[] tmp2 = state.split("-");
+			String speedupStr = tmp2[0];
+			int speedupStrTurn = Integer.valueOf(tmp2[1]);
+			String others = "";
+			for (int i = 1; i < tmp.length; i++) {
+				others += tmp[i]+",";
 			}
-			else {
+			if(others.endsWith(",")) {
+				others = others.substring(0, others.length()-1);
+			}
+			if(speedupStrTurn==_currentTurn) {
+				if(state.contains("speedup")) {
+					String[] tmp3 = speedupStr.split("X");
+					int span = Integer.valueOf(tmp3[1]);
+					speedupCount +=span;
+					user.setTotalSpeedupCount(speedupCount);
+					TottooHelper.setCurrentTottooLevel(user.getTottooList(), _currentLevel, others);
+					user.setTottooList(user.getTottooList());
+					gameState.setState("SPEEDUPX"+span);
+					_currentTurn++;
+					user.setCurrentTurn(_currentTurn);
+				} else {
+					//throw new NotDefinedBonusException("Not Defined Bonus. Option is forbidden!..");
+				}
+			} else {
 				gameState.setState("TRYAGAIN");
 				_currentTurn++;
-				currentTurn = _currentTurn;
+				user.setCurrentTurn(_currentTurn);
+			}
+		} else { //NO BONUS
+			String[] tmp = currentLevelOnCloud.split("-");
+			String levelx = tmp[0];
+			int currentTurnOnCloud = Integer.valueOf(tmp[1]);
+			if(currentTurnOnCloud==_currentTurn) {
+				setGameState(user,levelx,gameState,_currentLevel,_currentTurn);
+			} else {
+				gameState.setState("TRYAGAIN");
+				_currentTurn++;
+				user.setCurrentTurn(_currentTurn);
 			}
 		}
-		
 	}
 	
-	private static void setGameState(String levelx,GameState gameState,int _currentLevel,int _currentTurn) {
+	
+	private static void setGameState(User user,String levelx,GameState gameState,int currentLevel,int currentTurn) {
 		if(levelx.contains("levelup")) {
-			if(_currentLevel==9) {
+			if(currentLevel==9) {
 				gameState.setState("WIN");
 			} else {
 				gameState.setState("PASSLEVEL");
-				_currentLevel++;
-				_currentTurn = 1;
+				currentLevel++;
+				currentTurn = 1;
 			}
 		}
 		else if(levelx.contains("bonus")) {
-			if(_currentLevel==9) {
+			if(currentLevel==9) {
 				gameState.setState("WIN");
 			} else {
 				gameState.setState("2XPASSLEVEL");
-				_currentLevel+=2;
-				_currentTurn = 1;
+				currentLevel+=2;
+				currentTurn = 1;
 			}
 		}
 		else if(levelx.contains("backstep")) {
-			if(_currentLevel==0) {
+			if(currentLevel==0) {
 				gameState.setState("GAMEOVER");
-				_currentLevel = 0;
-				t = new Tottoo();
-				TottooHelper.generateLevelByMinLevel(t,_currentLevel);
-				//user.setTottooList(tottoo);
-				_currentTurn = 1;
+				currentLevel = 0;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
 			} else {
 				gameState.setState("BACKLEVEL");
-				_currentLevel--;
-				t = new Tottoo();
-				TottooHelper.generateLevelByMinLevel(t,_currentLevel);
-				//user.setTottooList(tottoo);
-				_currentTurn = 1;
+				currentLevel--;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
 			}
 		}
 		else if(levelx.contains("smalltrap")) {
-			if(_currentLevel==0) {
+			if(currentLevel==0) {
 				gameState.setState("GAMEOVER");
-				_currentLevel = 0;
-				t = new Tottoo();
-				TottooHelper.generateLevelByMinLevel(t,_currentLevel);
-				//user.setTottooList(tottoo);
-				_currentTurn = 1;
+				currentLevel = 0;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
 			} else {
 				gameState.setState("2XBACKLEVEL");
-				_currentLevel-=2;
-				t = new Tottoo();
-				TottooHelper.generateLevelByMinLevel(t,_currentLevel);
-				//user.setTottooList(tottoo);
-				_currentTurn = 1;
+				currentLevel-=2;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
 			}
 		}
 		else if(levelx.contains("bigtrap")) {
-			if(_currentLevel==0) {
+			if(currentLevel==0) {
 				gameState.setState("GAMEOVER");
-				_currentLevel = 0;
-				t = new Tottoo();
-				TottooHelper.generateLevelByMinLevel(t,_currentLevel);
-				//user.setTottooList(tottoo);
-				_currentTurn = 1;
+				currentLevel = 0;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
 			} else {
 				gameState.setState("3XBACKLEVEL");
-				_currentLevel-=3;
-				t = new Tottoo();
-				TottooHelper.generateLevelByMinLevel(t,_currentLevel);
-				//user.setTottooList(tottoo);
-				_currentTurn = 1;
+				currentLevel-=3;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
 			}
 		}
 		else {
 			gameState.setState("TRYAGAIN"); //defensive
-			_currentTurn++;
+			currentTurn++;
 		}
-		currentLevel = _currentLevel;
-		currentTurn = _currentTurn;
+		user.setCurrentLevel(currentLevel);
+		user.setCurrentTurn(currentTurn);
 	}
 	
 	private static void tryIt () {
-		t = new Tottoo();
+		Tottoo t = new Tottoo();
 		TottooHelper.generateAllLevels(t);
+		user.setTottooList(t);
+		user.setCurrentLevel(0);
+		user.setCurrentTurn(1);
+		user.setTotalSpeedupCount(0);
 	}
 
 	private static int calculateTotalTryCount(Tottoo t) {

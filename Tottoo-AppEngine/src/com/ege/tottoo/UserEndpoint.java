@@ -188,7 +188,13 @@ public class UserEndpoint {
 						String[] tmp2 = state.split("-");
 						String speedupStr = tmp2[0];
 						int speedupStrTurn = Integer.valueOf(tmp2[1]);
-						String others = tmp[1];
+						String others = "";
+						for (int i = 1; i < tmp.length; i++) {
+							others += tmp[i]+",";
+						}
+						if(others.endsWith(",")) {
+							others = others.substring(0, others.length()-1);
+						}
 						if(speedupStrTurn==playTurn) {
 							if(state.contains("speedup")) {
 								String[] tmp3 = speedupStr.split("X");
@@ -245,6 +251,7 @@ public class UserEndpoint {
 		if(levelx.contains("levelup")) {
 			if(currentLevel==9) {
 				gameState.setState("WIN");
+				user.setTotalSpeedupCount(0);
 			} else {
 				gameState.setState("PASSLEVEL");
 				currentLevel++;
@@ -254,6 +261,7 @@ public class UserEndpoint {
 		else if(levelx.contains("bonus")) {
 			if(currentLevel==9) {
 				gameState.setState("WIN");
+				user.setTotalSpeedupCount(0);
 			} else {
 				gameState.setState("2XPASSLEVEL");
 				currentLevel+=2;
@@ -268,6 +276,7 @@ public class UserEndpoint {
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
 				user.setTottooList(tottoo);
 				currentTurn = 1;
+				user.setTotalSpeedupCount(0);
 			} else {
 				gameState.setState("BACKLEVEL");
 				currentLevel--;
@@ -285,6 +294,7 @@ public class UserEndpoint {
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
 				user.setTottooList(tottoo);
 				currentTurn = 1;
+				user.setTotalSpeedupCount(0);
 			} else {
 				gameState.setState("2XBACKLEVEL");
 				currentLevel-=2;
@@ -302,6 +312,7 @@ public class UserEndpoint {
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
 				user.setTottooList(tottoo);
 				currentTurn = 1;
+				user.setTotalSpeedupCount(0);
 			} else {
 				gameState.setState("3XBACKLEVEL");
 				currentLevel-=3;
