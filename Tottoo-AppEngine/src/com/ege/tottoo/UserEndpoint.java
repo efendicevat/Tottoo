@@ -176,9 +176,11 @@ public class UserEndpoint {
 				log.info("speedupCount : "+speedupCount);
 				action.setPlayTime(Calendar.getInstance().getTime());
 				boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile);
+				int playLevel = user.getCurrentLevel();
+				int playTurn = user.getCurrentTurn();
 				if(isPlayable) {
 					Tottoo tottooOnCloud = user.getTottooList();
-					String currentLevelOnCloud = TottooHelper.getCurrentTottooLevel(tottooOnCloud, currentLevelOnMobile);
+					String currentLevelOnCloud = TottooHelper.getCurrentTottooLevel(tottooOnCloud, playLevel);
 					if(currentLevelOnCloud.contains(",")) { //HAS BONUS
 						log.info("HAS BONUS");
 						String[] tmp = currentLevelOnCloud.split(",");
@@ -187,33 +189,33 @@ public class UserEndpoint {
 						String speedupStr = tmp2[0];
 						int speedupStrTurn = Integer.valueOf(tmp2[1]);
 						String others = tmp[1];
-						if(speedupStrTurn==currentTurnOnMobile) {
+						if(speedupStrTurn==playTurn) {
 							if(state.contains("speedup")) {
 								String[] tmp3 = speedupStr.split("X");
 								int span = Integer.valueOf(tmp3[1]);
 								speedupCount +=span;
 								user.setTotalSpeedupCount(speedupCount);
-								TottooHelper.setCurrentTottooLevel(tottooOnCloud, currentLevelOnMobile, others);
+								TottooHelper.setCurrentTottooLevel(tottooOnCloud, playLevel, others);
 								user.setTottooList(tottooOnCloud);
 								gameState.setState("SPEEDUPX"+span);
-								currentTurnOnMobile++;
+								playTurn++;
 							} else {
 								throw new NotDefinedBonusException("Not Defined Bonus. Option is forbidden!..");
 							}
 						} else {
 							gameState.setState("TRYAGAIN");
-							currentTurnOnMobile++;
+							playTurn++;
 						}
 					} else { //NO BONUS
 						log.info("NO BONUS");
 						String[] tmp = currentLevelOnCloud.split("-");
 						String levelx = tmp[0];
 						int currentTurnOnCloud = Integer.valueOf(tmp[1]);
-						if(currentTurnOnCloud==currentTurnOnMobile) {
-							setGameState(user,levelx,gameState,currentLevelOnMobile,currentTurnOnMobile);
+						if(currentTurnOnCloud==playTurn) {
+							setGameState(user,levelx,gameState,playLevel,playTurn);
 						} else {
 							gameState.setState("TRYAGAIN");
-							currentTurnOnMobile++;
+							playTurn++;
 						}
 					}
 				}
@@ -223,8 +225,8 @@ public class UserEndpoint {
 				action.setGameState(gameState);
 				
 				txn.begin();
-				user.setCurrentLevel(currentLevelOnMobile);
-				user.setCurrentTurn(currentTurnOnMobile);
+				user.setCurrentLevel(playLevel);
+				user.setCurrentTurn(playTurn);
 				List<Interaction> interactions = user.getInteractions();
 				interactions.add(action);
 				user.setInteractions(interactions);
