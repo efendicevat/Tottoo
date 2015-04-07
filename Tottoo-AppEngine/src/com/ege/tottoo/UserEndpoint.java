@@ -199,6 +199,7 @@ public class UserEndpoint {
 								user.setTottooList(tottooOnCloud);
 								gameState.setState("SPEEDUPX"+span);
 								playTurn++;
+								user.setCurrentTurn(playTurn);
 							} else {
 								throw new NotDefinedBonusException("Not Defined Bonus. Option is forbidden!..");
 							}
