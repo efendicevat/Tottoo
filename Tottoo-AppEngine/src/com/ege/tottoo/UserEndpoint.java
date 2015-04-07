@@ -256,7 +256,7 @@ public class UserEndpoint {
 				gameState.setState("WIN");
 			} else {
 				gameState.setState("2XPASSLEVEL");
-				currentLevel++;
+				currentLevel+=2;
 				currentTurn = 1;
 			}
 		}
@@ -287,7 +287,7 @@ public class UserEndpoint {
 				currentTurn = 1;
 			} else {
 				gameState.setState("2XBACKLEVEL");
-				currentLevel--;
+				currentLevel-=2;
 				Tottoo tottoo = new Tottoo();
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
 				user.setTottooList(tottoo);
@@ -304,7 +304,7 @@ public class UserEndpoint {
 				currentTurn = 1;
 			} else {
 				gameState.setState("3XBACKLEVEL");
-				currentLevel--;
+				currentLevel-=3;
 				Tottoo tottoo = new Tottoo();
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
 				user.setTottooList(tottoo);
