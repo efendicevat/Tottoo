@@ -29,6 +29,24 @@ public class UserEndpoint {
 
 	private static final Logger log = Logger.getLogger(UserEndpoint.class.getName());
 	
+	private static final String tryAgain = "TRYAGAIN";
+	
+	private static final String speedupx = "SPEEDUPX";
+	
+	private static final String win = "WIN";
+	
+	private static final String backlevel = "BACKLEVEL";
+	
+	private static final String backlevelx2 = "2XBACKLEVEL";
+	
+	private static final String backlevelx3 = "3XBACKLEVEL";
+	
+	private static final String passlevel = "PASSLEVEL";
+	
+	private static final String passlevelx2 = "2XPASSLEVEL";
+	
+	private static final String gameover = "GAMEOVER";
+	
 	/**
 	 * This method lists all the entities inserted in datastore.
 	 * It uses HTTP GET method and paging support.
@@ -158,9 +176,69 @@ public class UserEndpoint {
 		}
 	}
 
+	@ApiMethod(name = "speedup")
+	public GameState speedup(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
+			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
+			@Named("speedupcount") int speedUpCount) throws TottooException
+	{
+		GameState gameState = null;
+		int tempTurn = currentTurnOnMobile;
+		
+		for (int i = 0; i < speedUpCount; i++) {
+			gameState = play(idOnMobile,identifierOnMobile,currentLevelOnMobile,tempTurn,true);
+			String state = gameState.getState();
+			if(state.equalsIgnoreCase(tryAgain)) {
+				//again
+				tempTurn++;
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else if(state.contains(speedupx)) {
+				//return immediately with remainder speedup count
+				break;
+			} else if(state.equalsIgnoreCase(win)) {
+				//return immediately
+				break;
+			} else if(state.equalsIgnoreCase(backlevel)) {
+				//return immediately
+				break;
+			} else if(state.equalsIgnoreCase(backlevelx2)) {
+				//return immediately
+				break;
+			} else if(state.equalsIgnoreCase(backlevelx3)) {
+				//return immediately
+				break;
+			} else if(state.equalsIgnoreCase(passlevel)) {
+				//return immediately
+				break;
+			} else if(state.equalsIgnoreCase(passlevelx2)) {
+				//return immediately
+				break;
+			} else if(state.equalsIgnoreCase(gameover)) {
+				//return immediately
+				break;
+			} else { //defensive tryagain
+				//again
+				tempTurn++;
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return gameState;
+	}
+	
 	@ApiMethod(name = "play")
 	public GameState play(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
-			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile) throws TottooException
+			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
+			@Named("isSpeedUp") boolean isSpeedUp) throws TottooException
 	{
 		Interaction action = new Interaction();
 		GameState gameState = new GameState();
@@ -200,17 +278,20 @@ public class UserEndpoint {
 								String[] tmp3 = speedupStr.split("X");
 								int span = Integer.valueOf(tmp3[1]);
 								speedupCount +=span;
+								if(isSpeedUp) {
+									speedupCount--;
+								}
 								user.setTotalSpeedupCount(speedupCount);
 								TottooHelper.setCurrentTottooLevel(tottooOnCloud, playLevel, others);
 								user.setTottooList(tottooOnCloud);
-								gameState.setState("SPEEDUPX"+span);
+								gameState.setState(speedupx+span);
 								playTurn++;
 								user.setCurrentTurn(playTurn);
 							} else {
 								throw new NotDefinedBonusException("Not Defined Bonus. Option is forbidden!..");
 							}
 						} else {
-							gameState.setState("TRYAGAIN");
+							gameState.setState(tryAgain);
 							playTurn++;
 							user.setCurrentTurn(playTurn);
 						}
@@ -222,7 +303,7 @@ public class UserEndpoint {
 						if(currentTurnOnCloud==playTurn) {
 							setGameState(user,levelx,gameState,playLevel,playTurn);
 						} else {
-							gameState.setState("TRYAGAIN");
+							gameState.setState(tryAgain);
 							playTurn++;
 							user.setCurrentTurn(playTurn);
 						}
@@ -250,27 +331,27 @@ public class UserEndpoint {
 	private void setGameState(User user,String levelx,GameState gameState,int currentLevel,int currentTurn) {
 		if(levelx.contains("levelup")) {
 			if(currentLevel==9) {
-				gameState.setState("WIN");
+				gameState.setState(win);
 				user.setTotalSpeedupCount(0);
 			} else {
-				gameState.setState("PASSLEVEL");
+				gameState.setState(passlevel);
 				currentLevel++;
 				currentTurn = 1;
 			}
 		}
 		else if(levelx.contains("bonus")) {
 			if(currentLevel==9) {
-				gameState.setState("WIN");
+				gameState.setState(win);
 				user.setTotalSpeedupCount(0);
 			} else {
-				gameState.setState("2XPASSLEVEL");
+				gameState.setState(passlevelx2);
 				currentLevel+=2;
 				currentTurn = 1;
 			}
 		}
 		else if(levelx.contains("backstep")) {
 			if(currentLevel==0) {
-				gameState.setState("GAMEOVER");
+				gameState.setState(gameover);
 				currentLevel = 0;
 				Tottoo tottoo = new Tottoo();
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
@@ -278,7 +359,7 @@ public class UserEndpoint {
 				currentTurn = 1;
 				user.setTotalSpeedupCount(0);
 			} else {
-				gameState.setState("BACKLEVEL");
+				gameState.setState(backlevel);
 				currentLevel--;
 				Tottoo tottoo = new Tottoo();
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
@@ -288,7 +369,7 @@ public class UserEndpoint {
 		}
 		else if(levelx.contains("smalltrap")) {
 			if(currentLevel==0) {
-				gameState.setState("GAMEOVER");
+				gameState.setState(gameover);
 				currentLevel = 0;
 				Tottoo tottoo = new Tottoo();
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
@@ -296,7 +377,7 @@ public class UserEndpoint {
 				currentTurn = 1;
 				user.setTotalSpeedupCount(0);
 			} else {
-				gameState.setState("2XBACKLEVEL");
+				gameState.setState(backlevelx2);
 				currentLevel-=2;
 				Tottoo tottoo = new Tottoo();
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
@@ -306,7 +387,7 @@ public class UserEndpoint {
 		}
 		else if(levelx.contains("bigtrap")) {
 			if(currentLevel==0) {
-				gameState.setState("GAMEOVER");
+				gameState.setState(gameover);
 				currentLevel = 0;
 				Tottoo tottoo = new Tottoo();
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
@@ -314,7 +395,7 @@ public class UserEndpoint {
 				currentTurn = 1;
 				user.setTotalSpeedupCount(0);
 			} else {
-				gameState.setState("3XBACKLEVEL");
+				gameState.setState(backlevelx3);
 				currentLevel-=3;
 				Tottoo tottoo = new Tottoo();
 				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
@@ -323,7 +404,7 @@ public class UserEndpoint {
 			}
 		}
 		else {
-			gameState.setState("TRYAGAIN"); //defensive
+			gameState.setState(tryAgain); //defensive
 			currentTurn++;
 		}
 		user.setCurrentLevel(currentLevel);

@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/kFCPPWfuglwpLolMthPadJUbGnA\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/TQqCgheYzLlOLRaFfhPqd2pWt5U\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -296,7 +296,7 @@
   },
   "play": {
    "id": "userendpoint.play",
-   "path": "play/{id}/{identifier}/{currentlevel}/{currentturn}",
+   "path": "play/{id}/{identifier}/{currentlevel}/{currentturn}/{isSpeedUp}",
    "httpMethod": "POST",
    "parameters": {
     "currentlevel": {
@@ -321,13 +321,19 @@
      "type": "string",
      "required": true,
      "location": "path"
+    },
+    "isSpeedUp": {
+     "type": "boolean",
+     "required": true,
+     "location": "path"
     }
    },
    "parameterOrder": [
     "id",
     "identifier",
     "currentlevel",
-    "currentturn"
+    "currentturn",
+    "isSpeedUp"
    ],
    "response": {
     "$ref": "GameState"
@@ -351,6 +357,55 @@
    "parameterOrder": [
     "id"
    ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "speedup": {
+   "id": "userendpoint.speedup",
+   "path": "speedup/{id}/{identifier}/{currentlevel}/{currentturn}/{speedupcount}",
+   "httpMethod": "POST",
+   "parameters": {
+    "currentlevel": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "path"
+    },
+    "currentturn": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "path"
+    },
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    },
+    "identifier": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
+    "speedupcount": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id",
+    "identifier",
+    "currentlevel",
+    "currentturn",
+    "speedupcount"
+   ],
+   "response": {
+    "$ref": "GameState"
+   },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]

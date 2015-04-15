@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/kFCPPWfuglwpLolMthPadJUbGnA\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/TQqCgheYzLlOLRaFfhPqd2pWt5U\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -310,13 +310,18 @@
     "identifier": {
      "type": "string",
      "required": true
+    },
+    "isSpeedUp": {
+     "type": "boolean",
+     "required": true
     }
    },
    "parameterOrder": [
     "id",
     "identifier",
     "currentlevel",
-    "currentturn"
+    "currentturn",
+    "isSpeedUp"
    ],
    "returns": {
     "$ref": "GameState"
@@ -337,6 +342,48 @@
    "parameterOrder": [
     "id"
    ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "userendpoint.speedup": {
+   "id": "userendpoint.speedup",
+   "parameters": {
+    "currentlevel": {
+     "type": "integer",
+     "required": true,
+     "format": "int32"
+    },
+    "currentturn": {
+     "type": "integer",
+     "required": true,
+     "format": "int32"
+    },
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "identifier": {
+     "type": "string",
+     "required": true
+    },
+    "speedupcount": {
+     "type": "integer",
+     "required": true,
+     "format": "int32"
+    }
+   },
+   "parameterOrder": [
+    "id",
+    "identifier",
+    "currentlevel",
+    "currentturn",
+    "speedupcount"
+   ],
+   "returns": {
+    "$ref": "GameState"
+   },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]

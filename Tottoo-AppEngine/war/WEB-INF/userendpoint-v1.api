@@ -64,33 +64,8 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "userendpoint.listUser" : {
-      "path" : "user",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.ege.tottoo.UserEndpoint.listUser",
-      "request" : {
-        "parameters" : {
-          "cursor" : {
-            "type" : "string",
-            "required" : false
-          },
-          "limit" : {
-            "type" : "int32",
-            "required" : false
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "userendpoint.play" : {
-      "path" : "play/{id}/{identifier}/{currentlevel}/{currentturn}",
+      "path" : "play/{id}/{identifier}/{currentlevel}/{currentturn}/{isSpeedUp}",
       "httpMethod" : "POST",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
@@ -114,6 +89,35 @@
           "currentturn" : {
             "type" : "int32",
             "required" : true
+          },
+          "isSpeedUp" : {
+            "type" : "boolean",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.listUser" : {
+      "path" : "user",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.UserEndpoint.listUser",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
           }
         },
         "body" : "empty"
@@ -157,6 +161,43 @@
       },
       "response" : {
         "body" : "empty"
+      }
+    },
+    "userendpoint.speedup" : {
+      "path" : "speedup/{id}/{identifier}/{currentlevel}/{currentturn}/{speedupcount}",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.UserEndpoint.speedup",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          },
+          "identifier" : {
+            "type" : "string",
+            "required" : true
+          },
+          "currentlevel" : {
+            "type" : "int32",
+            "required" : true
+          },
+          "currentturn" : {
+            "type" : "int32",
+            "required" : true
+          },
+          "speedupcount" : {
+            "type" : "int32",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
       }
     }
   },
@@ -333,14 +374,14 @@
           "$ref" : "Key"
         }
       },
-      "com.ege.tottoo.UserEndpoint.listUser" : {
-        "response" : {
-          "$ref" : "CollectionResponse_User"
-        }
-      },
       "com.ege.tottoo.UserEndpoint.play" : {
         "response" : {
           "$ref" : "GameState"
+        }
+      },
+      "com.ege.tottoo.UserEndpoint.listUser" : {
+        "response" : {
+          "$ref" : "CollectionResponse_User"
         }
       },
       "com.ege.tottoo.UserEndpoint.updateUser" : {
@@ -352,6 +393,11 @@
         }
       },
       "com.ege.tottoo.UserEndpoint.removeUser" : {
+      },
+      "com.ege.tottoo.UserEndpoint.speedup" : {
+        "response" : {
+          "$ref" : "GameState"
+        }
       }
     }
   }
