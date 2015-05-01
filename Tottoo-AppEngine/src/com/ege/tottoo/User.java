@@ -1,8 +1,11 @@
 package com.ege.tottoo;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +18,8 @@ import javax.persistence.OneToOne;
 import com.google.appengine.api.datastore.Key;
 
 @Entity
-public class User {
+@Cacheable
+public class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +40,14 @@ public class User {
 	private int currentLevel;
 	
 	private int totalSpeedupCount;
+	
+	private int maxCoin;
+	
+	private int remainCoin;
+	
+	private Date coinUsageTime;
+	
+	private int coinReloadMinute;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
@@ -130,6 +142,38 @@ public class User {
 
 	public void setTotalSpeedupCount(int totalSpeedupCount) {
 		this.totalSpeedupCount = totalSpeedupCount;
+	}
+
+	public int getMaxCoin() {
+		return maxCoin;
+	}
+
+	public void setMaxCoin(int maxCoin) {
+		this.maxCoin = maxCoin;
+	}
+
+	public int getRemainCoin() {
+		return remainCoin;
+	}
+
+	public void setRemainCoin(int remainCoin) {
+		this.remainCoin = remainCoin;
+	}
+
+	public Date getCoinUsageTime() {
+		return coinUsageTime;
+	}
+
+	public void setCoinUsageTime(Date coinUsageTime) {
+		this.coinUsageTime = coinUsageTime;
+	}
+
+	public int getCoinReloadMinute() {
+		return coinReloadMinute;
+	}
+
+	public void setCoinReloadMinute(int coinReloadMinute) {
+		this.coinReloadMinute = coinReloadMinute;
 	}
 	
 }

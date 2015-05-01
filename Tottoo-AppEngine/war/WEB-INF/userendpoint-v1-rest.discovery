@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/TQqCgheYzLlOLRaFfhPqd2pWt5U\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/gHocL4sEBzVhZgQvNAPrkQbGHNw\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -195,6 +195,14 @@
     "address": {
      "type": "string"
     },
+    "coinReloadMinute": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "coinUsageTime": {
+     "type": "string",
+     "format": "date-time"
+    },
     "currentLevel": {
      "type": "integer",
      "format": "int32"
@@ -218,11 +226,19 @@
     "key": {
      "$ref": "Key"
     },
+    "maxCoin": {
+     "type": "integer",
+     "format": "int32"
+    },
     "name": {
      "type": "string"
     },
     "phone": {
      "type": "string"
+    },
+    "remainCoin": {
+     "type": "integer",
+     "format": "int32"
     },
     "totalSpeedupCount": {
      "type": "integer",
@@ -296,9 +312,15 @@
   },
   "play": {
    "id": "userendpoint.play",
-   "path": "play/{id}/{identifier}/{currentlevel}/{currentturn}/{isSpeedUp}",
+   "path": "play/{id}/{identifier}/{currentlevel}/{currentturn}/{currentcoin}/{isSpeedUp}",
    "httpMethod": "POST",
    "parameters": {
+    "currentcoin": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "path"
+    },
     "currentlevel": {
      "type": "integer",
      "required": true,
@@ -333,6 +355,7 @@
     "identifier",
     "currentlevel",
     "currentturn",
+    "currentcoin",
     "isSpeedUp"
    ],
    "response": {
@@ -363,9 +386,15 @@
   },
   "speedup": {
    "id": "userendpoint.speedup",
-   "path": "speedup/{id}/{identifier}/{currentlevel}/{currentturn}/{speedupcount}",
+   "path": "speedup/{id}/{identifier}/{currentlevel}/{currentturn}/{currentcoin}",
    "httpMethod": "POST",
    "parameters": {
+    "currentcoin": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "path"
+    },
     "currentlevel": {
      "type": "integer",
      "required": true,
@@ -388,12 +417,6 @@
      "type": "string",
      "required": true,
      "location": "path"
-    },
-    "speedupcount": {
-     "type": "integer",
-     "required": true,
-     "format": "int32",
-     "location": "path"
     }
    },
    "parameterOrder": [
@@ -401,7 +424,7 @@
     "identifier",
     "currentlevel",
     "currentturn",
-    "speedupcount"
+    "currentcoin"
    ],
    "response": {
     "$ref": "GameState"

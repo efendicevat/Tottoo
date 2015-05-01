@@ -2,6 +2,7 @@ package com.ege.tottoo;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +23,9 @@ import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.datanucleus.query.JPACursorHelper;
 
 @Api(name = "userendpoint", namespace = @ApiNamespace(ownerDomain = "ege.com", ownerName = "ege.com", packagePath = "tottoo"))
@@ -46,6 +50,16 @@ public class UserEndpoint {
 	private static final String passlevelx2 = "2XPASSLEVEL";
 	
 	private static final String gameover = "GAMEOVER";
+	
+	private static final int MAX_COIN=10;
+	
+	private static final int COIN_RELOAD_MINUTE=10;
+	
+	private static final int MIN_LEVEL=0;
+	
+	private static final int MIN_TURN=1;
+	
+	private static final int MIN_SPEEDUP=0;
 	
 	/**
 	 * This method lists all the entities inserted in datastore.
@@ -128,6 +142,12 @@ public class UserEndpoint {
 			Tottoo tottoo = new Tottoo();
 			TottooHelper.generateAllLevels(tottoo);
 			user.setTottooList(tottoo);
+			user.setMaxCoin(MAX_COIN);
+			user.setCoinReloadMinute(COIN_RELOAD_MINUTE);
+			user.setRemainCoin(MAX_COIN);
+			user.setCurrentLevel(MIN_LEVEL);
+			user.setCurrentTurn(MIN_TURN);
+			user.setTotalSpeedupCount(MIN_SPEEDUP);
 			mgr.persist(user);
 		} catch(Exception e){
 			log.log(Level.SEVERE,"mgr in insertUser : "+mgr);
@@ -175,70 +195,51 @@ public class UserEndpoint {
 			mgr.close();
 		}
 	}
-
-	@ApiMethod(name = "speedup")
-	public GameState speedup(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
+/*
+	@ApiMethod(name = "generateAuthKey")
+	public AuthKey generateAuthKey(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
 			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
-			@Named("speedupcount") int speedUpCount) throws TottooException
-	{
-		GameState gameState = null;
-		int tempTurn = currentTurnOnMobile;
+			@Named("currentcoin") int currentCoin) {
 		
-		for (int i = 0; i < speedUpCount; i++) {
-			gameState = play(idOnMobile,identifierOnMobile,currentLevelOnMobile,tempTurn,true);
-			String state = gameState.getState();
-			if(state.equalsIgnoreCase(tryAgain)) {
-				//again
-				tempTurn++;
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else if(state.contains(speedupx)) {
-				//return immediately with remainder speedup count
-				break;
-			} else if(state.equalsIgnoreCase(win)) {
-				//return immediately
-				break;
-			} else if(state.equalsIgnoreCase(backlevel)) {
-				//return immediately
-				break;
-			} else if(state.equalsIgnoreCase(backlevelx2)) {
-				//return immediately
-				break;
-			} else if(state.equalsIgnoreCase(backlevelx3)) {
-				//return immediately
-				break;
-			} else if(state.equalsIgnoreCase(passlevel)) {
-				//return immediately
-				break;
-			} else if(state.equalsIgnoreCase(passlevelx2)) {
-				//return immediately
-				break;
-			} else if(state.equalsIgnoreCase(gameover)) {
-				//return immediately
-				break;
-			} else { //defensive tryagain
-				//again
-				tempTurn++;
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+		AuthKey result = new AuthKey();
+		
+		String uuid = UUID.randomUUID().toString();
+		
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+		
+		syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+		
+		User user = null;
+		
+		try {
+			user = getUser(idOnMobile);
+		} catch(Exception e) {
+			
 		}
 		
-		return gameState;
+		if(user != null) {
+			syncCache.put(uuid, user);
+			result.setAuthKey(uuid);
+		}
+	    
+		return result;
+	}*/
+
+	@ApiMethod(name = "speedup")
+	public GameState[] speedup(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
+			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
+			@Named("currentcoin") int currentCoin,@Named("speedupCount") int speedupCount) throws TottooException
+	{
+		for (int i = 0; i < speedupCount; i++) {
+			play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true);
+		}
+		return null;
 	}
 	
 	@ApiMethod(name = "play")
 	public GameState play(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
 			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
-			@Named("isSpeedUp") boolean isSpeedUp) throws TottooException
+			@Named("currentcoin") int currentCoin,@Named("isSpeedUp") boolean isSpeedUp) throws TottooException
 	{
 		Interaction action = new Interaction();
 		GameState gameState = new GameState();
@@ -253,10 +254,14 @@ public class UserEndpoint {
 				speedupCount = user.getTotalSpeedupCount();
 				log.info("speedupCount : "+speedupCount);
 				action.setPlayTime(Calendar.getInstance().getTime());
-				boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile);
+				boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile, currentCoin);
 				int playLevel = user.getCurrentLevel();
 				int playTurn = user.getCurrentTurn();
 				if(isPlayable) {
+					int coin = PlayHelper.calculateCoinOnCloud(user);
+					coin--;
+					user.setRemainCoin(coin);
+					user.setCoinUsageTime(Calendar.getInstance().getTime());
 					Tottoo tottooOnCloud = user.getTottooList();
 					String currentLevelOnCloud = TottooHelper.getCurrentTottooLevel(tottooOnCloud, playLevel);
 					if(currentLevelOnCloud.contains(",")) { //HAS BONUS
@@ -319,7 +324,10 @@ public class UserEndpoint {
 				interactions.add(action);
 				user.setInteractions(interactions);
 				txn.commit();
+				txn.wait();
 			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		} finally {
 			if(txn.isActive())
 				txn.rollback();
