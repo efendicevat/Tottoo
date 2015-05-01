@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/gHocL4sEBzVhZgQvNAPrkQbGHNw\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/cweFhDnT35d2P2msSLgKPZIGHHo\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -98,6 +98,18 @@
     },
     "state": {
      "type": "string"
+    }
+   }
+  },
+  "GameStateCollection": {
+   "id": "GameStateCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "GameState"
+     }
     }
    }
   },
@@ -386,7 +398,7 @@
   },
   "speedup": {
    "id": "userendpoint.speedup",
-   "path": "speedup/{id}/{identifier}/{currentlevel}/{currentturn}/{currentcoin}",
+   "path": "speedup/{id}/{identifier}/{currentlevel}/{currentturn}/{currentcoin}/{speedupCount}",
    "httpMethod": "POST",
    "parameters": {
     "currentcoin": {
@@ -417,6 +429,12 @@
      "type": "string",
      "required": true,
      "location": "path"
+    },
+    "speedupCount": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "path"
     }
    },
    "parameterOrder": [
@@ -424,10 +442,11 @@
     "identifier",
     "currentlevel",
     "currentturn",
-    "currentcoin"
+    "currentcoin",
+    "speedupCount"
    ],
    "response": {
-    "$ref": "GameState"
+    "$ref": "GameStateCollection"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
