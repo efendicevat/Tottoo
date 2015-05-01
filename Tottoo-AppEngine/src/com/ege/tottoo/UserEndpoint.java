@@ -324,10 +324,7 @@ public class UserEndpoint {
 				interactions.add(action);
 				user.setInteractions(interactions);
 				txn.commit();
-				txn.wait();
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		} finally {
 			if(txn.isActive())
 				txn.rollback();
