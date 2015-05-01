@@ -230,8 +230,11 @@ public class UserEndpoint {
 			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
 			@Named("currentcoin") int currentCoin,@Named("speedupCount") int speedupCount) throws TottooException
 	{
+		EntityManager mgr = getEntityManager();
+		User user = mgr.find(User.class, idOnMobile);
+		boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile, currentCoin);
 		for (int i = 0; i < speedupCount; i++) {
-			play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true);
+			play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true,isPlayable);
 		}
 		return null;
 	}
@@ -239,13 +242,15 @@ public class UserEndpoint {
 	@ApiMethod(name = "play")
 	public GameState play(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
 			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
-			@Named("currentcoin") int currentCoin,@Named("isSpeedUp") boolean isSpeedUp) throws TottooException
+			@Named("currentcoin") int currentCoin,@Named("isSpeedUp") boolean isSpeedUp,
+			@Named("isSpeedUpPlayable") boolean isSpeedupPlayable) throws TottooException
 	{
 		Interaction action = new Interaction();
 		GameState gameState = new GameState();
 		EntityManager mgr = getEntityManager();
 		EntityTransaction txn = mgr.getTransaction();
 		int speedupCount = 0;
+		boolean isPlayable = false;
 		try {
 			User user = mgr.find(User.class, idOnMobile);
 			if(user==null) {
@@ -254,7 +259,10 @@ public class UserEndpoint {
 				speedupCount = user.getTotalSpeedupCount();
 				log.info("speedupCount : "+speedupCount);
 				action.setPlayTime(Calendar.getInstance().getTime());
-				boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile, currentCoin);
+				if(isSpeedUp)
+					isPlayable = isSpeedupPlayable;
+				else
+					isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile, currentCoin);
 				int playLevel = user.getCurrentLevel();
 				int playTurn = user.getCurrentTurn();
 				if(isPlayable) {
