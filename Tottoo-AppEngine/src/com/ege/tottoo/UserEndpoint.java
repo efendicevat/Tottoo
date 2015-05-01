@@ -272,7 +272,12 @@ public class UserEndpoint {
 				int playTurn = user.getCurrentTurn();
 				if(isPlayable) {
 					int coin = PlayHelper.calculateCoinOnCloud(user);
-					if(isSpeedUp && isSpeedUpFirstTurn)
+					if(isSpeedUp)
+					{
+						if(isSpeedUpFirstTurn)
+							coin--;
+					}
+					else
 						coin--;
 					user.setRemainCoin(coin);
 					user.setCoinUsageTime(Calendar.getInstance().getTime());
