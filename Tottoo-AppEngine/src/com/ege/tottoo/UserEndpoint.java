@@ -233,8 +233,13 @@ public class UserEndpoint {
 		EntityManager mgr = getEntityManager();
 		User user = mgr.find(User.class, idOnMobile);
 		boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile, currentCoin);
+		boolean isSpeedUpFirstTurn = false;
 		for (int i = 0; i < speedupCount; i++) {
-			play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true,isPlayable);
+			if(i==0)
+				isSpeedUpFirstTurn = true;
+			else
+				isSpeedUpFirstTurn = false;
+			play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true,isPlayable,isSpeedUpFirstTurn);
 		}
 		return null;
 	}
@@ -243,7 +248,7 @@ public class UserEndpoint {
 	public GameState play(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
 			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
 			@Named("currentcoin") int currentCoin,@Named("isSpeedUp") boolean isSpeedUp,
-			@Named("isSpeedUpPlayable") boolean isSpeedupPlayable) throws TottooException
+			@Named("isSpeedUpPlayable") boolean isSpeedupPlayable, @Named("isSpeedUpFirstTurn") boolean isSpeedUpFirstTurn) throws TottooException
 	{
 		Interaction action = new Interaction();
 		GameState gameState = new GameState();
@@ -267,7 +272,8 @@ public class UserEndpoint {
 				int playTurn = user.getCurrentTurn();
 				if(isPlayable) {
 					int coin = PlayHelper.calculateCoinOnCloud(user);
-					coin--;
+					if(isSpeedUp && isSpeedUpFirstTurn)
+						coin--;
 					user.setRemainCoin(coin);
 					user.setCoinUsageTime(Calendar.getInstance().getTime());
 					Tottoo tottooOnCloud = user.getTottooList();
