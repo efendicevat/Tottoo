@@ -230,6 +230,7 @@ public class UserEndpoint {
 			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
 			@Named("currentcoin") int currentCoin,@Named("speedupCount") int speedupCount) throws TottooException
 	{
+		GameState[] states = new GameState[speedupCount];
 		EntityManager mgr = getEntityManager();
 		User user = mgr.find(User.class, idOnMobile);
 		boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile, currentCoin);
@@ -239,9 +240,10 @@ public class UserEndpoint {
 				isSpeedUpFirstTurn = true;
 			else
 				isSpeedUpFirstTurn = false;
-			play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true,isPlayable,isSpeedUpFirstTurn);
+			GameState state = play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true,isPlayable,isSpeedUpFirstTurn);
+			states[i]=state;
 		}
-		return null;
+		return states;
 	}
 	
 	@ApiMethod(name = "play")
