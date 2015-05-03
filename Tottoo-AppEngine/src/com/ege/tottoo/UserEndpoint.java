@@ -265,6 +265,10 @@ public class UserEndpoint {
 			} else {
 				speedupCount = user.getTotalSpeedupCount();
 				log.info("speedupCount : "+speedupCount);
+				if(isSpeedUp) {
+					speedupCount--;
+					user.setTotalSpeedupCount(speedupCount);
+				}
 				action.setPlayTime(Calendar.getInstance().getTime());
 				if(isSpeedUp)
 					isPlayable = isSpeedupPlayable;
@@ -304,9 +308,6 @@ public class UserEndpoint {
 								String[] tmp3 = speedupStr.split("X");
 								int span = Integer.valueOf(tmp3[1]);
 								speedupCount +=span;
-								if(isSpeedUp) {
-									speedupCount--;
-								}
 								user.setTotalSpeedupCount(speedupCount);
 								TottooHelper.setCurrentTottooLevel(tottooOnCloud, playLevel, others);
 								user.setTottooList(tottooOnCloud);
