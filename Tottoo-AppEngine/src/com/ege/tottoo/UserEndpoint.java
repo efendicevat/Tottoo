@@ -237,9 +237,11 @@ public class UserEndpoint {
 				throw new NotPlayableException("Play option is forbidden!..");
 			} else {
 				Interaction lastAction = user.getInteractions().get(user.getInteractions().size()-1);
-				Date date = lastAction.getPlayTime();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				log.warning("last play date : "+sdf.format(date));
+				if(lastAction!=null) {
+					Date date = lastAction.getPlayTime();
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					log.warning("last play date : "+sdf.format(date));
+				}
 				speedupCount = user.getTotalSpeedupCount();
 				log.warning("speedupCount : "+speedupCount);
 				if(isSpeedUp) {
