@@ -64,6 +64,31 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "userendpoint.listUser" : {
+      "path" : "user",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.UserEndpoint.listUser",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "userendpoint.play" : {
       "path" : "play/{id}/{identifier}/{currentlevel}/{currentturn}/{currentcoin}/{isSpeedUp}/{isSpeedUpPlayable}/{isSpeedUpFirstTurn}",
       "httpMethod" : "POST",
@@ -105,31 +130,6 @@
           "isSpeedUpFirstTurn" : {
             "type" : "boolean",
             "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "userendpoint.listUser" : {
-      "path" : "user",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.ege.tottoo.UserEndpoint.listUser",
-      "request" : {
-        "parameters" : {
-          "cursor" : {
-            "type" : "string",
-            "required" : false
-          },
-          "limit" : {
-            "type" : "int32",
-            "required" : false
           }
         },
         "body" : "empty"
@@ -415,14 +415,14 @@
           "$ref" : "Key"
         }
       },
-      "com.ege.tottoo.UserEndpoint.play" : {
-        "response" : {
-          "$ref" : "GameState"
-        }
-      },
       "com.ege.tottoo.UserEndpoint.listUser" : {
         "response" : {
           "$ref" : "CollectionResponse_User"
+        }
+      },
+      "com.ege.tottoo.UserEndpoint.play" : {
+        "response" : {
+          "$ref" : "GameState"
         }
       },
       "com.ege.tottoo.UserEndpoint.updateUser" : {

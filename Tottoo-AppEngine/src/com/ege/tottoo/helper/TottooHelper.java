@@ -58,7 +58,8 @@ public class TottooHelper {
 	}
 	
 	public static void generateAllLevels(Tottoo tottoo) {
-		tottoo.setLevel0("speedupX2-1,speedupX5-2,speedupX2-3,speedupX2-6,levelup-9");//generateLevels(1,1,1,new int[]{1,2},0,0,0,10)); 
+		//tottoo.setLevel0("speedupX2-1,speedupX5-2,speedupX2-3,speedupX2-6,levelup-9");//generateLevels(1,1,1,new int[]{1,2},0,0,0,10)); 
+		tottoo.setLevel0(generateLevels(1,1,1,new int[]{1,2},0,0,0,10));
 		tottoo.setLevel1(generateLevels(1,1,2,new int[]{1,2},1,0,0,100));
 		tottoo.setLevel2(generateLevels(1,1,3,new int[]{1,2,5},1,3,0,100)); 
 		tottoo.setLevel3(generateLevels(1,1,4,new int[]{2,5,10},1,2,1,100));

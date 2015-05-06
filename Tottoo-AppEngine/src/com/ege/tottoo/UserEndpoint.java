@@ -1,6 +1,8 @@
 package com.ege.tottoo;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -195,35 +197,6 @@ public class UserEndpoint {
 			mgr.close();
 		}
 	}
-/*
-	@ApiMethod(name = "generateAuthKey")
-	public AuthKey generateAuthKey(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
-			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
-			@Named("currentcoin") int currentCoin) {
-		
-		AuthKey result = new AuthKey();
-		
-		String uuid = UUID.randomUUID().toString();
-		
-		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
-		
-		syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
-		
-		User user = null;
-		
-		try {
-			user = getUser(idOnMobile);
-		} catch(Exception e) {
-			
-		}
-		
-		if(user != null) {
-			syncCache.put(uuid, user);
-			result.setAuthKey(uuid);
-		}
-	    
-		return result;
-	}*/
 
 	@ApiMethod(name = "speedup")
 	public GameState[] speedup(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
@@ -263,8 +236,12 @@ public class UserEndpoint {
 			if(user==null) {
 				throw new NotPlayableException("Play option is forbidden!..");
 			} else {
+				Interaction lastAction = user.getInteractions().get(user.getInteractions().size()-1);
+				Date date = lastAction.getPlayTime();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				log.warning("last play date : "+sdf.format(date));
 				speedupCount = user.getTotalSpeedupCount();
-				log.info("speedupCount : "+speedupCount);
+				log.warning("speedupCount : "+speedupCount);
 				if(isSpeedUp) {
 					speedupCount--;
 					user.setTotalSpeedupCount(speedupCount);
