@@ -236,8 +236,8 @@ public class UserEndpoint {
 			if(user==null) {
 				throw new NotPlayableException("Play option is forbidden!..");
 			} else {
-				Interaction lastAction = user.getInteractions().get(user.getInteractions().size()-1);
-				if(lastAction!=null) {
+				if(user.getInteractions().size()>0) {
+					Interaction lastAction = user.getInteractions().get(user.getInteractions().size()-1);
 					Date date = lastAction.getPlayTime();
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					log.warning("last play date : "+sdf.format(date));
