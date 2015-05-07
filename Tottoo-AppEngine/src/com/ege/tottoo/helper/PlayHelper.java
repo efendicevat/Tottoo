@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ege.tottoo.Interaction;
 import com.ege.tottoo.User;
 import com.ege.tottoo.UserEndpoint;
 
@@ -14,7 +15,7 @@ public class PlayHelper {
 	public static boolean isPlayable(User user,String identifier,int currentLevel,int currentTurn,int currentCoin) {
 		if(currentCoin==0)
 			return false;
-		int coinOnCloud = calculateCoinOnCloud(user);
+		int coinOnCloud = user.getRemainCoin();
 		if(coinOnCloud==0)
 			return false;
 		boolean isPlayable = false;
@@ -38,9 +39,11 @@ public class PlayHelper {
 		coin = user.getRemainCoin();
 		Calendar cal = Calendar.getInstance();
 		long now = cal.getTime().getTime();
-		if(user.getCoinUsageTime()==null)
+		int size = user.getInteractions().size();
+		if(size==0)
 			return UserEndpoint.MAX_COIN;
-		long usageTime = user.getCoinUsageTime().getTime();
+		Interaction action = user.getInteractions().get(size-1);
+		long usageTime = action.getPlayTime().getTime();
 		long diff = now-usageTime;
 		diff = diff/60000; //in minutes
 		int earnedCoin = (int)(diff/UserEndpoint.COIN_RELOAD_MINUTE);
