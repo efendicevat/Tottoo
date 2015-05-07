@@ -246,6 +246,7 @@ public class UserEndpoint {
 				}
 				action.setPlayTime(Calendar.getInstance().getTime());
 				int coin = PlayHelper.calculateCoinOnCloud(user);
+				log.warning("coin_on_cloud : "+coin);
 				user.setRemainCoin(coin);
 				if(isSpeedUp)
 					isPlayable = isSpeedupPlayable;
