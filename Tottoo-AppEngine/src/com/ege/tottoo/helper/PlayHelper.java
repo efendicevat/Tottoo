@@ -43,10 +43,10 @@ public class PlayHelper {
 		long usageTime = user.getCoinUsageTime().getTime();
 		long diff = now-usageTime;
 		diff = diff/60000; //in minutes
-		int earnedCoin = (int)(diff/UserEndpoint.MAX_COIN);
+		int earnedCoin = (int)(diff/UserEndpoint.COIN_RELOAD_MINUTE);
 		coin +=earnedCoin;
-		if(coin>10)
-			coin = 10;
+		if(coin>UserEndpoint.MAX_COIN)
+			coin = UserEndpoint.MAX_COIN;
 		return coin;
 	}
 }

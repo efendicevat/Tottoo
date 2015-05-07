@@ -55,7 +55,7 @@ public class UserEndpoint {
 	
 	public static final int MAX_COIN=10;
 	
-	private static final int COIN_RELOAD_MINUTE=1;
+	public static final int COIN_RELOAD_MINUTE=1;
 	
 	private static final int MIN_LEVEL=0;
 	
