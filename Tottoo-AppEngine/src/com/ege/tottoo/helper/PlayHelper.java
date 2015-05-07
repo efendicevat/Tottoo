@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.ege.tottoo.User;
+import com.ege.tottoo.UserEndpoint;
 
 public class PlayHelper {
 	
@@ -38,12 +39,12 @@ public class PlayHelper {
 		Calendar cal = Calendar.getInstance();
 		long now = cal.getTime().getTime();
 		if(user.getCoinUsageTime()==null)
-			return 10;
+			return UserEndpoint.MAX_COIN;
 		long usageTime = user.getCoinUsageTime().getTime();
 		long diff = now-usageTime;
 		diff = diff/60000; //in minutes
-		int passTime = (int)(diff/10);
-		coin +=passTime;
+		int earnedCoin = (int)(diff/UserEndpoint.MAX_COIN);
+		coin +=earnedCoin;
 		if(coin>10)
 			coin = 10;
 		return coin;

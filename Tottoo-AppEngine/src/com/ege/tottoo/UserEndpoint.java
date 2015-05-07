@@ -53,9 +53,9 @@ public class UserEndpoint {
 	
 	private static final String gameover = "GAMEOVER";
 	
-	private static final int MAX_COIN=10;
+	public static final int MAX_COIN=10;
 	
-	private static final int COIN_RELOAD_MINUTE=10;
+	private static final int COIN_RELOAD_MINUTE=1;
 	
 	private static final int MIN_LEVEL=0;
 	
@@ -206,6 +206,8 @@ public class UserEndpoint {
 		GameState[] states = new GameState[speedupCount];
 		EntityManager mgr = getEntityManager();
 		User user = mgr.find(User.class, idOnMobile);
+		int coin = PlayHelper.calculateCoinOnCloud(user);
+		user.setRemainCoin(coin);
 		boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile, currentCoin);
 		boolean isSpeedUpFirstTurn = false;
 		for (int i = 0; i < speedupCount; i++) {
@@ -236,12 +238,6 @@ public class UserEndpoint {
 			if(user==null) {
 				throw new NotPlayableException("Play option is forbidden!..");
 			} else {
-				if(user.getInteractions().size()>0) {
-					Interaction lastAction = user.getInteractions().get(user.getInteractions().size()-1);
-					Date date = lastAction.getPlayTime();
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					log.warning("last play date : "+sdf.format(date));
-				}
 				speedupCount = user.getTotalSpeedupCount();
 				log.warning("speedupCount : "+speedupCount);
 				if(isSpeedUp) {
@@ -249,6 +245,8 @@ public class UserEndpoint {
 					user.setTotalSpeedupCount(speedupCount);
 				}
 				action.setPlayTime(Calendar.getInstance().getTime());
+				int coin = PlayHelper.calculateCoinOnCloud(user);
+				user.setRemainCoin(coin);
 				if(isSpeedUp)
 					isPlayable = isSpeedupPlayable;
 				else
@@ -256,7 +254,6 @@ public class UserEndpoint {
 				int playLevel = user.getCurrentLevel();
 				int playTurn = user.getCurrentTurn();
 				if(isPlayable) {
-					int coin = PlayHelper.calculateCoinOnCloud(user);
 					if(isSpeedUp)
 					{
 						if(isSpeedUpFirstTurn)
