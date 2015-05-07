@@ -1,5 +1,6 @@
 package com.ege.tottoo.helper;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +44,9 @@ public class PlayHelper {
 		if(size==0)
 			return UserEndpoint.MAX_COIN;
 		Interaction action = user.getInteractions().get(size-1);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String str = sdf.format(cal.getTime());
+		log.warning("last_interaction_date : " + str);
 		long usageTime = action.getPlayTime().getTime();
 		long diff = now-usageTime;
 		diff = diff/60000; //in minutes
