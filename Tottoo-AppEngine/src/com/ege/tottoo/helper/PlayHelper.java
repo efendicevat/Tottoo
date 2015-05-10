@@ -38,12 +38,16 @@ public class PlayHelper {
 	public static int calculateCoinOnCloud(User user) {
 		int coin = 0;
 		coin = user.getRemainCoin();
+		int maxcoin = user.getMaxCoin();
+		int needcoin = maxcoin-coin;
+		if(needcoin==0)
+			return UserEndpoint.MAX_COIN;
 		Calendar cal = Calendar.getInstance();
 		long now = cal.getTime().getTime();
 		int size = user.getInteractions().size();
 		if(size==0)
 			return UserEndpoint.MAX_COIN;
-		Interaction action = user.getInteractions().get(size-1);
+		Interaction action = user.getInteractions().get(size-needcoin);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String str = sdf.format(cal.getTime());
 		log.warning("now_date : " + str);
