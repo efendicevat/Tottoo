@@ -49,6 +49,7 @@ public class User implements Serializable {
 	
 	private int coinReloadMinute;
 	
+	@OneToOne(cascade = CascadeType.ALL)
 	private Reload reload;
 	
 	@OneToOne(cascade = CascadeType.ALL)

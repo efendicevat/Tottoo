@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/5ydjm1q5ENKAly1On6JlO1qbU9E\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/J7x_YpOrvl0guiIR3nd9QukJYgo\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -72,6 +72,59 @@
   }
  },
  "schemas": {
+  "Calendar": {
+   "id": "Calendar",
+   "type": "object",
+   "properties": {
+    "fieldsComputed": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "fieldsNormalized": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "firstDayOfWeek": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "lenient": {
+     "type": "boolean"
+    },
+    "minimalDaysInFirstWeek": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "time": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "timeInMillis": {
+     "type": "string",
+     "format": "int64"
+    },
+    "timeZone": {
+     "$ref": "TimeZone"
+    },
+    "weekCountData": {
+     "$ref": "Locale"
+    },
+    "weekDateSupported": {
+     "type": "boolean"
+    },
+    "weekYear": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "weeksInWeekYear": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "zoneShared": {
+     "type": "boolean"
+    }
+   }
+  },
   "CollectionResponse_User": {
    "id": "CollectionResponse_User",
    "type": "object",
@@ -156,6 +209,132 @@
     },
     "parent": {
      "$ref": "Key"
+    }
+   }
+  },
+  "Locale": {
+   "id": "Locale",
+   "type": "object",
+   "properties": {
+    "country": {
+     "type": "string"
+    },
+    "displayCountry": {
+     "type": "string"
+    },
+    "displayLanguage": {
+     "type": "string"
+    },
+    "displayName": {
+     "type": "string"
+    },
+    "displayScript": {
+     "type": "string"
+    },
+    "displayVariant": {
+     "type": "string"
+    },
+    "extensionKeys": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "iso3Country": {
+     "type": "string"
+    },
+    "iso3Language": {
+     "type": "string"
+    },
+    "language": {
+     "type": "string"
+    },
+    "script": {
+     "type": "string"
+    },
+    "unicodeLocaleAttributes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "unicodeLocaleKeys": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "variant": {
+     "type": "string"
+    }
+   }
+  },
+  "Reload": {
+   "id": "Reload",
+   "type": "object",
+   "properties": {
+    "key": {
+     "$ref": "Key"
+    },
+    "reload1": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "reload10": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "reload2": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "reload3": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "reload4": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "reload5": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "reload6": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "reload7": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "reload8": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "reload9": {
+     "type": "string",
+     "format": "date-time"
+    }
+   }
+  },
+  "TimeZone": {
+   "id": "TimeZone",
+   "type": "object",
+   "properties": {
+    "displayName": {
+     "type": "string"
+    },
+    "dstsavings": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "id": {
+     "type": "string"
+    },
+    "rawOffset": {
+     "type": "integer",
+     "format": "int32"
     }
    }
   },
@@ -245,6 +424,9 @@
     },
     "phone": {
      "type": "string"
+    },
+    "reload": {
+     "$ref": "Reload"
     },
     "remainCoin": {
      "type": "integer",
@@ -355,9 +537,13 @@
     "isSpeedUpPlayable": {
      "type": "boolean",
      "required": true
+    },
+    "resource": {
+     "$ref": "Calendar"
     }
    },
    "parameterOrder": [
+    "resource",
     "id",
     "identifier",
     "currentlevel",
