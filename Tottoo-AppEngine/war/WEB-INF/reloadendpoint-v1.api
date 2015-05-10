@@ -1,0 +1,256 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://premium-fuze-90207.appspot.com/_ah/api",
+  "name" : "reloadendpoint",
+  "version" : "v1",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "https://premium-fuze-90207.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "ownerDomain" : "ege.com",
+  "ownerName" : "ege.com",
+  "packagePath" : "tottoo",
+  "methods" : {
+    "reloadendpoint.listReload" : {
+      "path" : "reload",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.ReloadEndpoint.listReload",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "reloadendpoint.removeReload" : {
+      "path" : "reload/{id}",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.ReloadEndpoint.removeReload",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "reloadendpoint.insertReload" : {
+      "path" : "reload",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.ReloadEndpoint.insertReload",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "reloadendpoint.getReload" : {
+      "path" : "reload/{id}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.ReloadEndpoint.getReload",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "reloadendpoint.updateReload" : {
+      "path" : "reload",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.ege.tottoo.ReloadEndpoint.updateReload",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "CollectionResponse_Reload" : {
+        "id" : "CollectionResponse_Reload",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Reload"
+            }
+          },
+          "nextPageToken" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Reload" : {
+        "id" : "Reload",
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "$ref" : "Key"
+          },
+          "reload1" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reload2" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reload3" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reload4" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reload5" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reload6" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reload7" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reload8" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reload9" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "reload10" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "Key" : {
+        "id" : "Key",
+        "type" : "object",
+        "properties" : {
+          "kind" : {
+            "type" : "string"
+          },
+          "appId" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "parent" : {
+            "$ref" : "Key"
+          },
+          "namespace" : {
+            "type" : "string"
+          },
+          "complete" : {
+            "type" : "boolean"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "com.ege.tottoo.ReloadEndpoint.listReload" : {
+        "response" : {
+          "$ref" : "CollectionResponse_Reload"
+        }
+      },
+      "com.ege.tottoo.ReloadEndpoint.removeReload" : {
+      },
+      "com.ege.tottoo.ReloadEndpoint.insertReload" : {
+        "request" : {
+          "$ref" : "Reload"
+        },
+        "response" : {
+          "$ref" : "Reload"
+        }
+      },
+      "com.ege.tottoo.ReloadEndpoint.getReload" : {
+        "response" : {
+          "$ref" : "Reload"
+        }
+      },
+      "com.ege.tottoo.ReloadEndpoint.updateReload" : {
+        "request" : {
+          "$ref" : "Reload"
+        },
+        "response" : {
+          "$ref" : "Reload"
+        }
+      }
+    }
+  }
+}
