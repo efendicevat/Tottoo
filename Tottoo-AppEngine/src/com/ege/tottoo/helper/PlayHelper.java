@@ -17,6 +17,7 @@ public class PlayHelper {
 	private static final Logger log = Logger.getLogger(PlayHelper.class.getName());
 	
 	public static boolean isPlayable(User user,String identifier,int currentLevel,int currentTurn,int currentCoin) {
+		log.warning("PlayHelper.isPlayable");
 		if(currentCoin==0)
 			return false;
 		int coinOnCloud = user.getRemainCoin();
@@ -39,7 +40,7 @@ public class PlayHelper {
 	}
 	
 	public static int calculateCoinOnCloud(User user,Calendar now) {
-		
+		log.warning("PlayHelper.calculateCoinOnCloud");
 		Reload reload = user.getReload();
 		int earnedCoin = 0 ;
 		if(now.getTime().after(reload.getReload10())) {
@@ -77,6 +78,7 @@ public class PlayHelper {
 	}
 	
 	private static void updateReload(User user,int earnedCoin) {
+		log.warning("PlayHelper.updateReload");
 		Reload reload = user.getReload();
 		Date baseTime = reload.getReload1();
 		if(earnedCoin==1) {
@@ -128,6 +130,7 @@ public class PlayHelper {
 	}
 
 	public static Reload initializeReload(Calendar now) {
+		log.warning("PlayHelper.initializeReload");
 		Reload reload = new Reload();
 		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
 		reload.setReload1(now.getTime());
