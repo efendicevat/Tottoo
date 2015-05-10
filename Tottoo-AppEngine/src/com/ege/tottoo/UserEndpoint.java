@@ -202,6 +202,7 @@ public class UserEndpoint {
 			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
 			@Named("currentcoin") int currentCoin,@Named("speedupCount") int speedupCount) throws TottooException
 	{
+		log.warning("Speedup Called");
 		GameState[] states = new GameState[speedupCount];
 		EntityManager mgr = getEntityManager();
 		User user = mgr.find(User.class, idOnMobile);
