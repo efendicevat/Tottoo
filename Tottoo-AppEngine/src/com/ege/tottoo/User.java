@@ -49,6 +49,8 @@ public class User implements Serializable {
 	
 	private int coinReloadMinute;
 	
+	private Reload reload;
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tottoo tottooList;
 
@@ -174,6 +176,14 @@ public class User implements Serializable {
 
 	public void setCoinReloadMinute(int coinReloadMinute) {
 		this.coinReloadMinute = coinReloadMinute;
+	}
+
+	public Reload getReload() {
+		return reload;
+	}
+
+	public void setReload(Reload reload) {
+		this.reload = reload;
 	}
 	
 }

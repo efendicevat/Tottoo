@@ -206,8 +206,11 @@ public class UserEndpoint {
 		GameState[] states = new GameState[speedupCount];
 		EntityManager mgr = getEntityManager();
 		User user = mgr.find(User.class, idOnMobile);
-		int coin = PlayHelper.calculateCoinOnCloud(user);
-		user.setRemainCoin(coin);
+		Calendar now = Calendar.getInstance();
+		if(currentCoin>user.getRemainCoin()) {
+			int coin = PlayHelper.calculateCoinOnCloud(user,now);
+			user.setRemainCoin(coin);
+		}
 		boolean isPlayable = PlayHelper.isPlayable(user, identifierOnMobile, currentLevelOnMobile, currentTurnOnMobile, currentCoin);
 		boolean isSpeedUpFirstTurn = false;
 		for (int i = 0; i < speedupCount; i++) {
@@ -215,7 +218,7 @@ public class UserEndpoint {
 				isSpeedUpFirstTurn = true;
 			else
 				isSpeedUpFirstTurn = false;
-			GameState state = play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true,isPlayable,isSpeedUpFirstTurn);
+			GameState state = play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true,isPlayable,isSpeedUpFirstTurn,now);
 			states[i]=state;
 		}
 		return states;
@@ -225,7 +228,8 @@ public class UserEndpoint {
 	public GameState play(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
 			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
 			@Named("currentcoin") int currentCoin,@Named("isSpeedUp") boolean isSpeedUp,
-			@Named("isSpeedUpPlayable") boolean isSpeedupPlayable, @Named("isSpeedUpFirstTurn") boolean isSpeedUpFirstTurn) throws TottooException
+			@Named("isSpeedUpPlayable") boolean isSpeedupPlayable, @Named("isSpeedUpFirstTurn") boolean isSpeedUpFirstTurn,
+			Calendar speedpUpNow) throws TottooException
 	{
 		Interaction action = new Interaction();
 		GameState gameState = new GameState();
@@ -233,11 +237,20 @@ public class UserEndpoint {
 		EntityTransaction txn = mgr.getTransaction();
 		int speedupCount = 0;
 		boolean isPlayable = false;
+		Calendar now;
+		if(isSpeedUp)
+			now = speedpUpNow;
+		else
+			now = Calendar.getInstance();
 		try {
 			User user = mgr.find(User.class, idOnMobile);
 			if(user==null) {
 				throw new NotPlayableException("Play option is forbidden!..");
 			} else {
+				int coin = user.getRemainCoin();
+				if(user.getReload()==null) {
+					user.setReload(PlayHelper.initializeReload(now));
+				}
 				speedupCount = user.getTotalSpeedupCount();
 				log.warning("speedupCount : "+speedupCount);
 				if(isSpeedUp) {
@@ -245,10 +258,12 @@ public class UserEndpoint {
 					user.setTotalSpeedupCount(speedupCount);
 				}
 				action.setPlayTime(Calendar.getInstance().getTime());
-				int coin = PlayHelper.calculateCoinOnCloud(user);
-				log.warning("coin_on_cloud : "+coin);
-				log.warning("currentCoin : " +currentCoin);
-				user.setRemainCoin(coin);
+				if(currentCoin>user.getRemainCoin()) {
+					coin = PlayHelper.calculateCoinOnCloud(user,now);
+					log.warning("coin_on_cloud : "+coin);
+					log.warning("currentCoin : " +currentCoin);
+					user.setRemainCoin(coin);
+				}
 				if(isSpeedUp)
 					isPlayable = isSpeedupPlayable;
 				else
@@ -264,7 +279,7 @@ public class UserEndpoint {
 					else
 						coin--;
 					user.setRemainCoin(coin);
-					user.setCoinUsageTime(Calendar.getInstance().getTime());
+					user.setCoinUsageTime(now.getTime());
 					Tottoo tottooOnCloud = user.getTottooList();
 					String currentLevelOnCloud = TottooHelper.getCurrentTottooLevel(tottooOnCloud, playLevel);
 					if(currentLevelOnCloud.contains(",")) { //HAS BONUS
