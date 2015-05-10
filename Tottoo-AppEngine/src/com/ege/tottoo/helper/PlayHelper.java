@@ -46,8 +46,12 @@ public class PlayHelper {
 		Interaction action = user.getInteractions().get(size-1);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String str = sdf.format(cal.getTime());
+		log.warning("now_date : " + str);
+		str = sdf.format(action.getPlayTime().getTime());
 		log.warning("last_interaction_date : " + str);
 		long usageTime = action.getPlayTime().getTime();
+		log.warning("now_long : " + now);
+		log.warning("last_interaction_long : " + usageTime);
 		long diff = now-usageTime;
 		diff = diff/60000; //in minutes
 		int earnedCoin = (int)(diff/UserEndpoint.COIN_RELOAD_MINUTE);
