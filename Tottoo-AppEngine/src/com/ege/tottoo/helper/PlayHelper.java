@@ -100,7 +100,8 @@ public class PlayHelper {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(baseTime);
-		reload.setReload1(baseTime);
+		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
+		reload.setReload1(cal.getTime());
 		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
 		reload.setReload2(cal.getTime());
 		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
