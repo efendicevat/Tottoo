@@ -69,7 +69,10 @@ public class PlayHelper {
 		if(coin>UserEndpoint.MAX_COIN)
 			coin = UserEndpoint.MAX_COIN;
 		
-		updateReload(user,earnedCoin);
+		if(coin==UserEndpoint.MAX_COIN)
+			user.setReload(initializeReload(now));
+		else
+			updateReload(user,earnedCoin);
 		return coin;
 	}
 	

@@ -122,7 +122,6 @@ public class UserEndpoint {
 		User user = null;
 		try {
 			user = mgr.find(User.class, id);
-			log.log(Level.WARNING,"interactions : "+user.getInteractions());
 		} finally {
 			mgr.close();
 		}
@@ -230,7 +229,6 @@ public class UserEndpoint {
 			@Named("currentcoin") int currentCoin,@Named("isSpeedUp") boolean isSpeedUp,
 			@Named("isSpeedUpPlayable") boolean isSpeedupPlayable, @Named("isSpeedUpFirstTurn") boolean isSpeedUpFirstTurn) throws TottooException
 	{
-		log.warning("play_starts");
 		Interaction action = new Interaction();
 		GameState gameState = new GameState();
 		EntityManager mgr = getEntityManager();
@@ -245,12 +243,10 @@ public class UserEndpoint {
 				throw new NotPlayableException("Play option is forbidden!..");
 			} else {
 				int coin = user.getRemainCoin();
-				log.warning("reload_user : "+user.getReload());
 				if(user.getReload()==null) {
 					user.setReload(PlayHelper.initializeReload(now));
 				}
 				speedupCount = user.getTotalSpeedupCount();
-				log.warning("speedupCount : "+speedupCount);
 				if(isSpeedUp) {
 					speedupCount--;
 					user.setTotalSpeedupCount(speedupCount);
@@ -258,8 +254,6 @@ public class UserEndpoint {
 				action.setPlayTime(Calendar.getInstance().getTime());
 				if(currentCoin>user.getRemainCoin()) {
 					coin = PlayHelper.calculateCoinOnCloud(user,now);
-					log.warning("coin_on_cloud : "+coin);
-					log.warning("currentCoin : " +currentCoin);
 					user.setRemainCoin(coin);
 				}
 				if(isSpeedUp)
@@ -281,7 +275,6 @@ public class UserEndpoint {
 					Tottoo tottooOnCloud = user.getTottooList();
 					String currentLevelOnCloud = TottooHelper.getCurrentTottooLevel(tottooOnCloud, playLevel);
 					if(currentLevelOnCloud.contains(",")) { //HAS BONUS
-						log.info("HAS BONUS");
 						String[] tmp = currentLevelOnCloud.split(",");
 						String state = tmp[0];
 						String[] tmp2 = state.split("-");
@@ -314,7 +307,6 @@ public class UserEndpoint {
 							user.setCurrentTurn(playTurn);
 						}
 					} else { //NO BONUS
-						log.info("NO BONUS");
 						String[] tmp = currentLevelOnCloud.split("-");
 						String levelx = tmp[0];
 						int currentTurnOnCloud = Integer.valueOf(tmp[1]);
