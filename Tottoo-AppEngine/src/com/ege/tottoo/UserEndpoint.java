@@ -218,7 +218,7 @@ public class UserEndpoint {
 				isSpeedUpFirstTurn = true;
 			else
 				isSpeedUpFirstTurn = false;
-			GameState state = play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true,isPlayable,isSpeedUpFirstTurn,now);
+			GameState state = play(idOnMobile,identifierOnMobile,currentLevelOnMobile,currentTurnOnMobile,currentCoin,true,isPlayable,isSpeedUpFirstTurn);
 			states[i]=state;
 		}
 		return states;
@@ -228,26 +228,24 @@ public class UserEndpoint {
 	public GameState play(@Named("id") Long idOnMobile,@Named("identifier") String identifierOnMobile,
 			@Named("currentlevel") int currentLevelOnMobile,@Named("currentturn") int currentTurnOnMobile,
 			@Named("currentcoin") int currentCoin,@Named("isSpeedUp") boolean isSpeedUp,
-			@Named("isSpeedUpPlayable") boolean isSpeedupPlayable, @Named("isSpeedUpFirstTurn") boolean isSpeedUpFirstTurn,
-			Calendar speedpUpNow) throws TottooException
+			@Named("isSpeedUpPlayable") boolean isSpeedupPlayable, @Named("isSpeedUpFirstTurn") boolean isSpeedUpFirstTurn) throws TottooException
 	{
+		log.warning("play_starts");
 		Interaction action = new Interaction();
 		GameState gameState = new GameState();
 		EntityManager mgr = getEntityManager();
 		EntityTransaction txn = mgr.getTransaction();
 		int speedupCount = 0;
 		boolean isPlayable = false;
-		Calendar now;
-		if(isSpeedUp)
-			now = speedpUpNow;
-		else
-			now = Calendar.getInstance();
+		
+		Calendar now = Calendar.getInstance();
 		try {
 			User user = mgr.find(User.class, idOnMobile);
 			if(user==null) {
 				throw new NotPlayableException("Play option is forbidden!..");
 			} else {
 				int coin = user.getRemainCoin();
+				log.warning("reload_user : "+user.getReload());
 				if(user.getReload()==null) {
 					user.setReload(PlayHelper.initializeReload(now));
 				}

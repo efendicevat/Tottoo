@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/J7x_YpOrvl0guiIR3nd9QukJYgo\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/LTF8gJQR-FbUeAb1_SRR13bE5bg\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v1",
  "name": "userendpoint",
@@ -74,59 +74,6 @@
   }
  },
  "schemas": {
-  "Calendar": {
-   "id": "Calendar",
-   "type": "object",
-   "properties": {
-    "fieldsComputed": {
-     "type": "integer",
-     "format": "int32"
-    },
-    "fieldsNormalized": {
-     "type": "integer",
-     "format": "int32"
-    },
-    "firstDayOfWeek": {
-     "type": "integer",
-     "format": "int32"
-    },
-    "lenient": {
-     "type": "boolean"
-    },
-    "minimalDaysInFirstWeek": {
-     "type": "integer",
-     "format": "int32"
-    },
-    "time": {
-     "type": "string",
-     "format": "date-time"
-    },
-    "timeInMillis": {
-     "type": "string",
-     "format": "int64"
-    },
-    "timeZone": {
-     "$ref": "TimeZone"
-    },
-    "weekCountData": {
-     "$ref": "Locale"
-    },
-    "weekDateSupported": {
-     "type": "boolean"
-    },
-    "weekYear": {
-     "type": "integer",
-     "format": "int32"
-    },
-    "weeksInWeekYear": {
-     "type": "integer",
-     "format": "int32"
-    },
-    "zoneShared": {
-     "type": "boolean"
-    }
-   }
-  },
   "CollectionResponse_User": {
    "id": "CollectionResponse_User",
    "type": "object",
@@ -214,63 +161,6 @@
     }
    }
   },
-  "Locale": {
-   "id": "Locale",
-   "type": "object",
-   "properties": {
-    "country": {
-     "type": "string"
-    },
-    "displayCountry": {
-     "type": "string"
-    },
-    "displayLanguage": {
-     "type": "string"
-    },
-    "displayName": {
-     "type": "string"
-    },
-    "displayScript": {
-     "type": "string"
-    },
-    "displayVariant": {
-     "type": "string"
-    },
-    "extensionKeys": {
-     "type": "array",
-     "items": {
-      "type": "string"
-     }
-    },
-    "iso3Country": {
-     "type": "string"
-    },
-    "iso3Language": {
-     "type": "string"
-    },
-    "language": {
-     "type": "string"
-    },
-    "script": {
-     "type": "string"
-    },
-    "unicodeLocaleAttributes": {
-     "type": "array",
-     "items": {
-      "type": "string"
-     }
-    },
-    "unicodeLocaleKeys": {
-     "type": "array",
-     "items": {
-      "type": "string"
-     }
-    },
-    "variant": {
-     "type": "string"
-    }
-   }
-  },
   "Reload": {
    "id": "Reload",
    "type": "object",
@@ -317,26 +207,6 @@
     "reload9": {
      "type": "string",
      "format": "date-time"
-    }
-   }
-  },
-  "TimeZone": {
-   "id": "TimeZone",
-   "type": "object",
-   "properties": {
-    "displayName": {
-     "type": "string"
-    },
-    "dstsavings": {
-     "type": "integer",
-     "format": "int32"
-    },
-    "id": {
-     "type": "string"
-    },
-    "rawOffset": {
-     "type": "integer",
-     "format": "int32"
     }
    }
   },
@@ -564,10 +434,6 @@
     "isSpeedUpPlayable",
     "isSpeedUpFirstTurn"
    ],
-   "request": {
-    "$ref": "Calendar",
-    "parameterName": "resource"
-   },
    "response": {
     "$ref": "GameState"
    },

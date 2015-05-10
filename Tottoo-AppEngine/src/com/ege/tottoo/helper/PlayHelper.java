@@ -64,7 +64,7 @@ public class PlayHelper {
 			earnedCoin = UserEndpoint.MAX_COIN-9;
 		}
 		
-		int coin = 0;
+		int coin = user.getRemainCoin();
 		coin +=earnedCoin;
 		if(coin>UserEndpoint.MAX_COIN)
 			coin = UserEndpoint.MAX_COIN;

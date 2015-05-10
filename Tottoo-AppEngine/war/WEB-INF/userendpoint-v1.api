@@ -132,8 +132,7 @@
             "required" : true
           }
         },
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
+        "body" : "empty"
       },
       "response" : {
         "body" : "autoTemplate(backendResponse)"
@@ -441,128 +440,6 @@
           }
         }
       },
-      "Calendar" : {
-        "id" : "Calendar",
-        "type" : "object",
-        "properties" : {
-          "time" : {
-            "type" : "string",
-            "format" : "date-time"
-          },
-          "lenient" : {
-            "type" : "boolean"
-          },
-          "firstDayOfWeek" : {
-            "type" : "integer"
-          },
-          "minimalDaysInFirstWeek" : {
-            "type" : "integer"
-          },
-          "timeZone" : {
-            "$ref" : "TimeZone"
-          },
-          "timeInMillis" : {
-            "type" : "string",
-            "format" : "int64"
-          },
-          "weekCountData" : {
-            "$ref" : "Locale"
-          },
-          "weekYear" : {
-            "type" : "integer"
-          },
-          "weeksInWeekYear" : {
-            "type" : "integer"
-          },
-          "weekDateSupported" : {
-            "type" : "boolean"
-          },
-          "fieldsComputed" : {
-            "type" : "integer"
-          },
-          "fieldsNormalized" : {
-            "type" : "integer"
-          },
-          "zoneShared" : {
-            "type" : "boolean"
-          }
-        }
-      },
-      "TimeZone" : {
-        "id" : "TimeZone",
-        "type" : "object",
-        "properties" : {
-          "displayName" : {
-            "type" : "string"
-          },
-          "id" : {
-            "type" : "string"
-          },
-          "rawOffset" : {
-            "type" : "integer"
-          },
-          "dstsavings" : {
-            "type" : "integer"
-          }
-        }
-      },
-      "Locale" : {
-        "id" : "Locale",
-        "type" : "object",
-        "properties" : {
-          "language" : {
-            "type" : "string"
-          },
-          "country" : {
-            "type" : "string"
-          },
-          "displayCountry" : {
-            "type" : "string"
-          },
-          "displayLanguage" : {
-            "type" : "string"
-          },
-          "displayName" : {
-            "type" : "string"
-          },
-          "displayScript" : {
-            "type" : "string"
-          },
-          "displayVariant" : {
-            "type" : "string"
-          },
-          "extensionKeys" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "iso3Country" : {
-            "type" : "string"
-          },
-          "iso3Language" : {
-            "type" : "string"
-          },
-          "script" : {
-            "type" : "string"
-          },
-          "unicodeLocaleAttributes" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "unicodeLocaleKeys" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "variant" : {
-            "type" : "string"
-          }
-        }
-      },
       "GameStateCollection" : {
         "id" : "GameStateCollection",
         "type" : "object",
@@ -596,9 +473,6 @@
         }
       },
       "com.ege.tottoo.UserEndpoint.play" : {
-        "request" : {
-          "$ref" : "Calendar"
-        },
         "response" : {
           "$ref" : "GameState"
         }
