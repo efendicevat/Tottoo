@@ -1,35 +1,57 @@
 package com.ege.tottoo.helper;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ege.tottoo.GameState;
 import com.ege.tottoo.Interaction;
 import com.ege.tottoo.Reload;
+import com.ege.tottoo.Tottoo;
 import com.ege.tottoo.User;
 import com.ege.tottoo.UserEndpoint;
+import com.ege.tottoo.exceptions.NotDefinedBonusException;
+import com.ege.tottoo.exceptions.NotPlayableException;
+import com.ege.tottoo.exceptions.TottooException;
+import com.ege.tottoo.mobile.MobilePlayPlan;
 
 public class PlayHelper {
 	
 	private static final Logger log = Logger.getLogger(PlayHelper.class.getName());
 	
-	public static boolean isPlayable(User user,String identifier,int currentLevel,int currentTurn,int currentCoin) {
+	private static final String TRYAGAIN = "TRYAGAIN";
+	
+	private static final String SPEEDUPX = "SPEEDUPX";
+	
+	private static final String WIN = "WIN";
+	
+	private static final String BACKLEVEL = "BACKLEVEL";
+	
+	private static final String BACKLEVELX2 = "2XBACKLEVEL";
+	
+	private static final String BACKLEVELX3 = "3XBACKLEVEL";
+	
+	private static final String PASSLEVEL = "PASSLEVEL";
+	
+	private static final String PASSLEVELX2 = "2XPASSLEVEL";
+	
+	private static final String GAMEOVER = "GAMEOVER";
+	
+	public static boolean isPlayable(User user,MobilePlayPlan mobilePlayPlan) {
 		log.warning("PlayHelper.isPlayable");
-		if(currentCoin==0)
+		if(mobilePlayPlan.getCurrentCoin()==0)
 			return false;
 		int coinOnCloud = user.getRemainCoin();
 		if(coinOnCloud==0)
 			return false;
 		boolean isPlayable = false;
-		if(user.getIdentifier().equalsIgnoreCase(identifier))
+		if(user.getIdentifier().equalsIgnoreCase(mobilePlayPlan.getIdentifier()))
 		{
-			if(user.getCurrentLevel()==currentLevel)
+			if(user.getCurrentLevel()==mobilePlayPlan.getCurrentLevel())
 			{
-				if(user.getCurrentTurn()==currentTurn) {
-					if(coinOnCloud==currentCoin) {
+				if(user.getCurrentTurn()==mobilePlayPlan.getCurrentTurn()) {
+					if(coinOnCloud==mobilePlayPlan.getCurrentCoin()) {
 						isPlayable = true;
 					}
 				}
@@ -39,119 +61,178 @@ public class PlayHelper {
 		return isPlayable;
 	}
 	
-	public static int calculateCoinOnCloud(User user,Calendar now) {
-		log.warning("PlayHelper.calculateCoinOnCloud");
-		Reload reload = user.getReload();
-		int earnedCoin = 0 ;
-		if(now.getTime().after(reload.getReload10())) {
-			earnedCoin = UserEndpoint.MAX_COIN;
-		} else if(now.getTime().after(reload.getReload9())) {
-			earnedCoin = UserEndpoint.MAX_COIN-1;
-		} else if(now.getTime().after(reload.getReload8())) {
-			earnedCoin = UserEndpoint.MAX_COIN-2;
-		} else if(now.getTime().after(reload.getReload7())) {
-			earnedCoin = UserEndpoint.MAX_COIN-3;
-		} else if(now.getTime().after(reload.getReload6())) {
-			earnedCoin = UserEndpoint.MAX_COIN-4;
-		} else if(now.getTime().after(reload.getReload5())) {
-			earnedCoin = UserEndpoint.MAX_COIN-5;
-		} else if(now.getTime().after(reload.getReload4())) {
-			earnedCoin = UserEndpoint.MAX_COIN-6;
-		} else if(now.getTime().after(reload.getReload3())) {
-			earnedCoin = UserEndpoint.MAX_COIN-7;
-		} else if(now.getTime().after(reload.getReload2())) {
-			earnedCoin = UserEndpoint.MAX_COIN-8;
-		} else if(now.getTime().after(reload.getReload1())) {
-			earnedCoin = UserEndpoint.MAX_COIN-9;
-		}
-		
+	public static GameState playTottoo(User user,MobilePlayPlan mobilePlayPlan,boolean isSpeedUp,boolean isSpeedUpFirstTurn) 
+			throws TottooException {
+		Interaction action = new Interaction();
+		GameState gameState = new GameState();
+		Calendar now = Calendar.getInstance();
 		int coin = user.getRemainCoin();
-		coin +=earnedCoin;
-		if(coin>UserEndpoint.MAX_COIN)
-			coin = UserEndpoint.MAX_COIN;
+		int speedupCount = user.getTotalSpeedupCount();
+		if(user.getReload()==null) {
+			user.setReload(ReloadHelper.initializeReload(now));
+		}
+		if(isSpeedUp) {
+			speedupCount--;
+			user.setTotalSpeedupCount(speedupCount);
+		}
+		action.setPlayTime(Calendar.getInstance().getTime());
+		if(mobilePlayPlan.getCurrentCoin()>user.getRemainCoin()) {
+			coin = ReloadHelper.calculateCoinOnCloud(user,now);
+			user.setRemainCoin(coin);
+		}
+		boolean isPlayable = PlayHelper.isPlayable(user, mobilePlayPlan);
+		if(isPlayable) {
+			if(isSpeedUp)
+			{
+				if(isSpeedUpFirstTurn)
+					coin--;
+			}
+			else
+				coin--;
+			
+			user.setRemainCoin(coin);
+			user.setCoinUsageTime(now.getTime());
+			
+			Tottoo tottooOnCloud = user.getTottooList();
+			int playTurn = user.getCurrentTurn();
+			int playLevel = user.getCurrentLevel();
+			String currentLevelOnCloud = TottooHelper.getCurrentTottooLevel(tottooOnCloud, playLevel);
+			if(currentLevelOnCloud.contains(",")) { //HAS BONUS
+				String[] tmp = currentLevelOnCloud.split(",");
+				String state = tmp[0];
+				String[] tmp2 = state.split("-");
+				String speedupStr = tmp2[0];
+				int speedupStrTurn = Integer.valueOf(tmp2[1]);
+				String others = "";
+				for (int i = 1; i < tmp.length; i++) {
+					others += tmp[i]+",";
+				}
+				if(others.endsWith(",")) {
+					others = others.substring(0, others.length()-1);
+				}
+				
+				if(speedupStrTurn==playTurn) {
+					if(state.contains("speedup")) {
+						String[] tmp3 = speedupStr.split("X");
+						int span = Integer.valueOf(tmp3[1]);
+						speedupCount +=span;
+						user.setTotalSpeedupCount(speedupCount);
+						TottooHelper.setCurrentTottooLevel(tottooOnCloud, playLevel, others);
+						user.setTottooList(tottooOnCloud);
+						gameState.setState(SPEEDUPX+span);
+						playTurn++;
+						user.setCurrentTurn(playTurn);
+					} else {
+						throw new NotDefinedBonusException("Not Defined Bonus. Option is forbidden!..");
+					}
+				} else {
+					gameState.setState(TRYAGAIN);
+					playTurn++;
+					user.setCurrentTurn(playTurn);
+				}
+			} else { //NO BONUS
+				String[] tmp = currentLevelOnCloud.split("-");
+				String levelx = tmp[0];
+				int currentTurnOnCloud = Integer.valueOf(tmp[1]);
+				if(currentTurnOnCloud==playTurn) {
+					setGameState(user,levelx,gameState,playLevel,playTurn);
+				} else {
+					gameState.setState(TRYAGAIN);
+					playTurn++;
+					user.setCurrentTurn(playTurn);
+				}
+			}
+		} else {
+			throw new NotPlayableException("Play option is forbidden!..");
+		}
+		action.setGameState(gameState);
+		List<Interaction> interactions = user.getInteractions();
+		interactions.add(action);
+		user.setInteractions(interactions);
 		
-		if(coin==UserEndpoint.MAX_COIN)
-			user.setReload(initializeReload(now));
-		else
-			updateReload(user,earnedCoin);
-		return coin;
+		return gameState;
 	}
 	
-	private static void updateReload(User user,int earnedCoin) {
-		log.warning("PlayHelper.updateReload");
-		Reload reload = user.getReload();
-		Date baseTime = reload.getReload1();
-		if(earnedCoin==1) {
-			baseTime = reload.getReload1();
-		} else if(earnedCoin==2) {
-			baseTime = reload.getReload2();
-		} else if(earnedCoin==3) {
-			baseTime = reload.getReload3();
-		} else if(earnedCoin==4) {
-			baseTime = reload.getReload4();
-		} else if(earnedCoin==5) {
-			baseTime = reload.getReload5();
-		} else if(earnedCoin==6) {
-			baseTime = reload.getReload6();
-		} else if(earnedCoin==7) {
-			baseTime = reload.getReload7();
-		} else if(earnedCoin==8) {
-			baseTime = reload.getReload8();
-		} else if(earnedCoin==9) {
-			baseTime = reload.getReload9();
-		} else if(earnedCoin==10) {
-			baseTime = reload.getReload10();
+	private static void setGameState(User user,String levelx,GameState gameState,int currentLevel,int currentTurn) {
+		if(levelx.contains("levelup")) {
+			if(currentLevel==9) {
+				gameState.setState(WIN);
+				user.setTotalSpeedupCount(0);
+			} else {
+				gameState.setState(PASSLEVEL);
+				currentLevel++;
+				currentTurn = 1;
+			}
 		}
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(baseTime);
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload1(cal.getTime());
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload2(cal.getTime());
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload3(cal.getTime());
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload4(cal.getTime());
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload5(cal.getTime());
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload6(cal.getTime());
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload7(cal.getTime());
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload8(cal.getTime());
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload9(cal.getTime());
-		cal.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload10(cal.getTime());
-		
-		user.setReload(reload);
-	}
-
-	public static Reload initializeReload(Calendar now) {
-		log.warning("PlayHelper.initializeReload");
-		Reload reload = new Reload();
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload1(now.getTime());
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload2(now.getTime());
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload3(now.getTime());
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload4(now.getTime());
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload5(now.getTime());
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload6(now.getTime());
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload7(now.getTime());
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload8(now.getTime());
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload9(now.getTime());
-		now.add(Calendar.MINUTE, UserEndpoint.COIN_RELOAD_MINUTE);
-		reload.setReload10(now.getTime());
-		return reload;
+		else if(levelx.contains("bonus")) {
+			if(currentLevel==9) {
+				gameState.setState(WIN);
+				user.setTotalSpeedupCount(0);
+			} else {
+				gameState.setState(PASSLEVELX2);
+				currentLevel+=2;
+				currentTurn = 1;
+			}
+		}
+		else if(levelx.contains("backstep")) {
+			if(currentLevel==0) {
+				gameState.setState(GAMEOVER);
+				currentLevel = 0;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+				user.setTotalSpeedupCount(0);
+			} else {
+				gameState.setState(BACKLEVEL);
+				currentLevel--;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+			}
+		}
+		else if(levelx.contains("smalltrap")) {
+			if(currentLevel==0) {
+				gameState.setState(GAMEOVER);
+				currentLevel = 0;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+				user.setTotalSpeedupCount(0);
+			} else {
+				gameState.setState(BACKLEVELX2);
+				currentLevel-=2;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+			}
+		}
+		else if(levelx.contains("bigtrap")) {
+			if(currentLevel==0) {
+				gameState.setState(GAMEOVER);
+				currentLevel = 0;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+				user.setTotalSpeedupCount(0);
+			} else {
+				gameState.setState(BACKLEVELX3);
+				currentLevel-=3;
+				Tottoo tottoo = new Tottoo();
+				TottooHelper.generateLevelByMinLevel(tottoo,currentLevel);
+				user.setTottooList(tottoo);
+				currentTurn = 1;
+			}
+		}
+		else {
+			gameState.setState(TRYAGAIN); //defensive
+			currentTurn++;
+		}
+		user.setCurrentLevel(currentLevel);
+		user.setCurrentTurn(currentTurn);
 	}
 }
